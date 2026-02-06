@@ -4,6 +4,7 @@
  */
 
 import { Router } from 'express';
+import crypto from 'crypto';
 import { query, getClient } from '../config/database.js';
 import { authenticate, requireRole, canAccessStylist } from '../middleware/auth.js';
 import { sendAdHocSMS } from '../services/notifications.js';
@@ -19,9 +20,7 @@ router.use(authenticate);
  */
 router.get('/dashboard', async (req, res, next) => {
     try {
-        const stylistFilter = req.user.role === 'stylist' && req.user.stylist_id
-            ? `AND stylist_id = '${req.user.stylist_id}'`
-            : '';
+        const stylistParam = (req.user.role === 'stylist' && req.user.stylist_id) || null;
 
         const today = new Date().toISOString().split('T')[0];
         const weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
@@ -32,8 +31,8 @@ router.get('/dashboard', async (req, res, next) => {
             FROM bookings
             WHERE DATE(start_datetime) = $1
               AND status NOT IN ('cancelled')
-              ${stylistFilter}
-        `, [today]);
+              AND ($2::uuid IS NULL OR stylist_id = $2)
+        `, [today, stylistParam]);
 
         // This week's bookings
         const weekBookings = await query(`
@@ -41,8 +40,8 @@ router.get('/dashboard', async (req, res, next) => {
             FROM bookings
             WHERE DATE(start_datetime) >= $1
               AND status NOT IN ('cancelled')
-              ${stylistFilter}
-        `, [weekAgo]);
+              AND ($2::uuid IS NULL OR stylist_id = $2)
+        `, [weekAgo, stylistParam]);
 
         // Upcoming bookings (next 7 days)
         const upcomingBookings = await query(`
@@ -58,10 +57,10 @@ router.get('/dashboard', async (req, res, next) => {
             WHERE b.start_datetime >= NOW()
               AND b.start_datetime < NOW() + INTERVAL '7 days'
               AND b.status NOT IN ('cancelled')
-              ${stylistFilter}
+              AND ($1::uuid IS NULL OR b.stylist_id = $1)
             ORDER BY b.start_datetime
             LIMIT 10
-        `);
+        `, [stylistParam]);
 
         // Recent bookings
         const recentBookings = await query(`
@@ -75,10 +74,10 @@ router.get('/dashboard', async (req, res, next) => {
                 b.status,
                 b.created_at
             FROM bookings b
-            ${stylistFilter ? 'WHERE ' + stylistFilter.replace('AND ', '') : ''}
+            WHERE ($1::uuid IS NULL OR b.stylist_id = $1)
             ORDER BY b.created_at DESC
             LIMIT 5
-        `);
+        `, [stylistParam]);
 
         res.json({
             today: {
@@ -159,7 +158,7 @@ router.post('/stylists', requireRole('owner'), async (req, res, next) => {
 
         // Create admin user with temporary password
         const bcrypt = await import('bcryptjs');
-        const tempPassword = 'changeme123';
+        const tempPassword = crypto.randomBytes(12).toString('base64url');
         const passwordHash = await bcrypt.default.hash(tempPassword, 10);
 
         await client.query(`

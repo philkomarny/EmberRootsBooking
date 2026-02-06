@@ -17,11 +17,22 @@ const emailTransporter = nodemailer.createTransport({
     }
 });
 
+// PII masking helpers
+function maskEmail(email) {
+    if (!email) return '[none]';
+    const [user, domain] = email.split('@');
+    return `${user[0]}***@${domain}`;
+}
+function maskPhone(phone) {
+    if (!phone) return '[none]';
+    return `***${phone.slice(-4)}`;
+}
+
 // Twilio client (lazy initialization)
 let twilioClient = null;
-function getTwilio() {
+async function getTwilio() {
     if (!twilioClient && process.env.TWILIO_ACCOUNT_SID) {
-        const twilio = require('twilio');
+        const { default: twilio } = await import('twilio');
         twilioClient = twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
     }
     return twilioClient;
@@ -163,7 +174,7 @@ export async function sendConfirmationEmail(booking) {
             }
         });
 
-        console.log(`✉️ Confirmation email sent to ${booking.client_email}`);
+        console.log(`✉️ Confirmation email sent to ${maskEmail(booking.client_email)}`);
         return true;
     } catch (err) {
         console.error('Failed to send confirmation email:', err);
@@ -233,7 +244,7 @@ export async function sendReminderEmail(booking) {
             html
         });
 
-        console.log(`✉️ Reminder email sent to ${booking.client_email}`);
+        console.log(`✉️ Reminder email sent to ${maskEmail(booking.client_email)}`);
         return true;
     } catch (err) {
         console.error('Failed to send reminder email:', err);
@@ -245,7 +256,7 @@ export async function sendReminderEmail(booking) {
  * Send SMS confirmation
  */
 export async function sendConfirmationSMS(booking) {
-    const twilio = getTwilio();
+    const twilio = await getTwilio();
     if (!twilio || !booking.client_phone) return false;
 
     const appointmentDate = new Date(booking.start_datetime);
@@ -269,7 +280,7 @@ export async function sendConfirmationSMS(booking) {
             to: booking.client_phone
         });
 
-        console.log(`📱 Confirmation SMS sent to ${booking.client_phone}`);
+        console.log(`📱 Confirmation SMS sent to ${maskPhone(booking.client_phone)}`);
         return true;
     } catch (err) {
         console.error('Failed to send confirmation SMS:', err);
@@ -281,7 +292,7 @@ export async function sendConfirmationSMS(booking) {
  * Send SMS reminder
  */
 export async function sendReminderSMS(booking) {
-    const twilio = getTwilio();
+    const twilio = await getTwilio();
     if (!twilio || !booking.client_phone) return false;
 
     const appointmentDate = new Date(booking.start_datetime);
@@ -300,7 +311,7 @@ export async function sendReminderSMS(booking) {
             to: booking.client_phone
         });
 
-        console.log(`📱 Reminder SMS sent to ${booking.client_phone}`);
+        console.log(`📱 Reminder SMS sent to ${maskPhone(booking.client_phone)}`);
         return true;
     } catch (err) {
         console.error('Failed to send reminder SMS:', err);
@@ -359,7 +370,7 @@ export async function sendOTPEmail(email, code) {
     if (!process.env.RESEND_API_KEY) {
         console.log(`\n📧 ============================================`);
         console.log(`📧  EMAIL NOT CONFIGURED (Dev Mode)`);
-        console.log(`📧  OTP Code for ${email}: ${code}`);
+        console.log(`📧  OTP Code for ${maskEmail(email)}: ${code}`);
         console.log(`📧 ============================================\n`);
         return false;
     }
@@ -398,7 +409,7 @@ export async function sendOTPEmail(email, code) {
             html
         });
 
-        console.log(`✉️ OTP email sent to ${email}`);
+        console.log(`✉️ OTP email sent to ${maskEmail(email)}`);
         return true;
     } catch (err) {
         console.error('Failed to send OTP email:', err);
@@ -410,7 +421,7 @@ export async function sendOTPEmail(email, code) {
  * Send OTP verification SMS
  */
 export async function sendOTPSMS(phone, code) {
-    const twilio = getTwilio();
+    const twilio = await getTwilio();
     if (!twilio) {
         console.log('Twilio not configured, skipping SMS');
         return false;
@@ -425,7 +436,7 @@ export async function sendOTPSMS(phone, code) {
             to: phone
         });
 
-        console.log(`📱 OTP SMS sent to ${phone}`);
+        console.log(`📱 OTP SMS sent to ${maskPhone(phone)}`);
         return true;
     } catch (err) {
         console.error('Failed to send OTP SMS:', err);
@@ -437,7 +448,7 @@ export async function sendOTPSMS(phone, code) {
  * Send an ad-hoc SMS message (admin compose)
  */
 export async function sendAdHocSMS(to, message) {
-    const twilio = getTwilio();
+    const twilio = await getTwilio();
     if (!twilio) {
         throw new Error('Twilio is not configured');
     }
@@ -448,6 +459,6 @@ export async function sendAdHocSMS(to, message) {
         to: to
     });
 
-    console.log(`📱 Ad-hoc SMS sent to ${to}`);
+    console.log(`📱 Ad-hoc SMS sent to ${maskPhone(to)}`);
     return true;
 }

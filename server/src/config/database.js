@@ -3,15 +3,31 @@
  */
 
 import pg from 'pg';
+import { readFileSync } from 'fs';
 import dotenv from 'dotenv';
 
 dotenv.config();
 
 const { Pool } = pg;
 
+// Build SSL config for production
+function getSslConfig() {
+    if (process.env.NODE_ENV !== 'production') return false;
+    const config = {
+        rejectUnauthorized: process.env.DATABASE_SSL_REJECT_UNAUTHORIZED === 'false' ? false : true
+    };
+    if (process.env.DATABASE_SSL_REJECT_UNAUTHORIZED === 'false') {
+        console.warn('WARNING: DATABASE_SSL_REJECT_UNAUTHORIZED=false disables TLS certificate verification.');
+    }
+    if (process.env.DATABASE_SSL_CA) {
+        config.ca = readFileSync(process.env.DATABASE_SSL_CA, 'utf8');
+    }
+    return config;
+}
+
 const pool = new Pool({
     connectionString: process.env.DATABASE_URL,
-    ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,
+    ssl: getSslConfig(),
     max: 20,
     idleTimeoutMillis: 30000,
     connectionTimeoutMillis: 2000,

@@ -2,12 +2,20 @@
  * Ember & Roots Admin Dashboard
  */
 
-const API_URL = 'http://localhost:3001/api';
+const API_URL = '/api';
 const BUSINESS_TZ = 'America/New_York';
 
 // State
 let currentUser = null;
-let authToken = localStorage.getItem('adminToken');
+let authToken = sessionStorage.getItem('adminToken');
+
+function showSectionLoading(containerId) {
+    const el = document.getElementById(containerId);
+    if (el) el.innerHTML = '<div style="text-align:center;padding:40px;color:#7d8471;">Loading...</div>';
+}
+function hideSectionLoading(containerId) {
+    // Content will be replaced by the actual data load
+}
 
 // SMS Templates
 const SMS_TEMPLATES = {
@@ -35,6 +43,20 @@ document.addEventListener('DOMContentLoaded', () => {
 function setupEventListeners() {
     // Login form
     document.getElementById('loginForm').addEventListener('submit', handleLogin);
+
+    // Mobile menu toggle
+    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    const sidebarOverlay = document.getElementById('sidebarOverlay');
+    if (mobileMenuBtn) {
+        mobileMenuBtn.addEventListener('click', () => {
+            document.querySelector('.sidebar')?.classList.toggle('open');
+            sidebarOverlay?.classList.toggle('active');
+        });
+        sidebarOverlay?.addEventListener('click', () => {
+            document.querySelector('.sidebar')?.classList.remove('open');
+            sidebarOverlay?.classList.remove('active');
+        });
+    }
 
     // Logout
     document.getElementById('logoutBtn').addEventListener('click', handleLogout);
@@ -124,7 +146,7 @@ async function handleLogin(e) {
 
         authToken = data.token;
         currentUser = data.user;
-        localStorage.setItem('adminToken', authToken);
+        sessionStorage.setItem('adminToken', authToken);
 
         showDashboard();
     } catch (err) {
@@ -145,7 +167,7 @@ async function fetchCurrentUser() {
 function handleLogout() {
     authToken = null;
     currentUser = null;
-    localStorage.removeItem('adminToken');
+    sessionStorage.removeItem('adminToken');
     showLogin();
 }
 
@@ -244,6 +266,8 @@ function navigateTo(section) {
  * Dashboard
  */
 async function loadDashboard() {
+    showSectionLoading('upcomingList');
+    showSectionLoading('recentList');
     try {
         const data = await api('/admin/dashboard');
 
@@ -266,10 +290,10 @@ async function loadDashboard() {
                             ${date.toLocaleTimeString('en-US', { timeZone: BUSINESS_TZ, hour: 'numeric', minute: '2-digit' })}
                         </div>
                         <div class="appointment-info">
-                            <div class="appointment-service">${appt.service_name}</div>
-                            <div class="appointment-client">${appt.client_name} • ${appt.stylist_name}</div>
+                            <div class="appointment-service">${escapeHtml(appt.service_name)}</div>
+                            <div class="appointment-client">${escapeHtml(appt.client_name)} • ${escapeHtml(appt.stylist_name)}</div>
                         </div>
-                        <span class="appointment-status status-${appt.status}">${appt.status}</span>
+                        <span class="appointment-status status-${appt.status}">${escapeHtml(appt.status)}</span>
                     </div>
                 `;
             }).join('');
@@ -285,10 +309,10 @@ async function loadDashboard() {
                 return `
                     <div class="booking-item" data-id="${booking.id}">
                         <div class="appointment-info">
-                            <div class="appointment-service">${booking.service_name}</div>
-                            <div class="appointment-client">${booking.client_name} • ${date.toLocaleDateString()}</div>
+                            <div class="appointment-service">${escapeHtml(booking.service_name)}</div>
+                            <div class="appointment-client">${escapeHtml(booking.client_name)} • ${date.toLocaleDateString()}</div>
                         </div>
-                        <span class="booking-status status-${booking.status}">${booking.status}</span>
+                        <span class="booking-status status-${booking.status}">${escapeHtml(booking.status)}</span>
                     </div>
                 `;
             }).join('');
@@ -385,6 +409,7 @@ function navigateCalendar(direction) {
 let bookingsCache = [];
 
 async function loadBookings() {
+    showSectionLoading('bookingsTable');
     const status = document.getElementById('bookingStatusFilter').value;
     const dateFrom = document.getElementById('bookingDateFrom').value;
     const dateTo = document.getElementById('bookingDateTo').value;
@@ -417,12 +442,12 @@ async function loadBookings() {
                 const date = new Date(b.start_datetime);
                 return `
                     <div class="table-row" data-id="${b.id}">
-                        <span>${b.confirmation_code}</span>
-                        <span>${b.service_name}</span>
-                        <span>${b.client_name}</span>
+                        <span>${escapeHtml(b.confirmation_code)}</span>
+                        <span>${escapeHtml(b.service_name)}</span>
+                        <span>${escapeHtml(b.client_name)}</span>
                         <span>${date.toLocaleDateString('en-US', { timeZone: BUSINESS_TZ })} ${date.toLocaleTimeString('en-US', { timeZone: BUSINESS_TZ, hour: 'numeric', minute: '2-digit' })}</span>
-                        <span>${b.stylist_name}</span>
-                        <span class="booking-status status-${b.status}">${b.status}</span>
+                        <span>${escapeHtml(b.stylist_name)}</span>
+                        <span class="booking-status status-${b.status}">${escapeHtml(b.status)}</span>
                     </div>
                 `;
             }).join('')}
@@ -458,14 +483,14 @@ function openBookingDetail(bookingId) {
     content.innerHTML = `
         <div class="booking-detail-card">
             <div class="booking-detail-status">
-                <span class="confirmation-code">#${booking.confirmation_code}</span>
-                <span class="booking-status status-${booking.status}">${booking.status}</span>
+                <span class="confirmation-code">#${escapeHtml(booking.confirmation_code)}</span>
+                <span class="booking-status status-${booking.status}">${escapeHtml(booking.status)}</span>
             </div>
 
             <div class="booking-detail-grid">
                 <div class="booking-detail-field">
                     <label>Service</label>
-                    <span class="field-value">${booking.service_name}</span>
+                    <span class="field-value">${escapeHtml(booking.service_name)}</span>
                 </div>
                 <div class="booking-detail-field">
                     <label>Duration</label>
@@ -481,7 +506,7 @@ function openBookingDetail(bookingId) {
                 </div>
                 <div class="booking-detail-field">
                     <label>Stylist</label>
-                    <span class="field-value">${booking.stylist_name}</span>
+                    <span class="field-value">${escapeHtml(booking.stylist_name)}</span>
                 </div>
                 <div class="booking-detail-field">
                     <label>Price</label>
@@ -489,21 +514,21 @@ function openBookingDetail(bookingId) {
                 </div>
                 <div class="booking-detail-field">
                     <label>Client</label>
-                    <span class="field-value">${booking.client_name}</span>
+                    <span class="field-value">${escapeHtml(booking.client_name)}</span>
                 </div>
                 <div class="booking-detail-field">
                     <label>Email</label>
-                    <span class="field-value">${booking.client_email}</span>
+                    <span class="field-value">${escapeHtml(booking.client_email)}</span>
                 </div>
                 ${booking.client_phone ? `
                 <div class="booking-detail-field">
                     <label>Phone</label>
-                    <span class="field-value">${booking.client_phone}</span>
+                    <span class="field-value">${escapeHtml(booking.client_phone)}</span>
                 </div>` : ''}
                 ${booking.client_notes ? `
                 <div class="booking-detail-field full-width">
                     <label>Client Notes</label>
-                    <span class="field-value">${booking.client_notes}</span>
+                    <span class="field-value">${escapeHtml(booking.client_notes)}</span>
                 </div>` : ''}
             </div>
 
@@ -523,7 +548,7 @@ function openBookingDetail(bookingId) {
 
             <div class="booking-notes-section">
                 <h4>Session Notes</h4>
-                <textarea class="booking-notes-textarea" id="bookingNotes" placeholder="Add notes about this appointment (will be saved to client record)...">${booking.internal_notes || ''}</textarea>
+                <textarea class="booking-notes-textarea" id="bookingNotes" placeholder="Add notes about this appointment (will be saved to client record)...">${escapeHtml(booking.internal_notes || '')}</textarea>
             </div>
 
             <div class="booking-detail-actions">
@@ -555,7 +580,7 @@ function openBookingDetail(bookingId) {
             ${booking.internal_notes ? `
             <div class="booking-notes-section">
                 <h4>Session Notes</h4>
-                <p style="font-size: 0.9rem; color: var(--charcoal); line-height: 1.5;">${booking.internal_notes}</p>
+                <p style="font-size: 0.9rem; color: var(--charcoal); line-height: 1.5;">${escapeHtml(booking.internal_notes)}</p>
             </div>` : ''}
             `}
         </div>
@@ -653,9 +678,9 @@ async function loadAvailability() {
                     <input type="checkbox" class="schedule-day-toggle" ${slot ? 'checked' : ''}>
                     <span class="schedule-day-name">${day}</span>
                     <div class="schedule-times">
-                        <input type="time" class="schedule-start" value="${slot?.start_time?.substring(0, 5) || '09:00'}">
+                        <input type="time" class="schedule-start" value="${escapeHtml(slot?.start_time?.substring(0, 5) || '09:00')}">
                         <span>to</span>
-                        <input type="time" class="schedule-end" value="${slot?.end_time?.substring(0, 5) || '17:00'}">
+                        <input type="time" class="schedule-end" value="${escapeHtml(slot?.end_time?.substring(0, 5) || '17:00')}">
                     </div>
                 </div>
             `;
@@ -678,7 +703,7 @@ async function loadAvailability() {
                                 ${start.toLocaleDateString('en-US', { timeZone: BUSINESS_TZ })} ${start.toLocaleTimeString('en-US', { timeZone: BUSINESS_TZ, hour: 'numeric', minute: '2-digit' })}
                                 - ${end.toLocaleDateString('en-US', { timeZone: BUSINESS_TZ })} ${end.toLocaleTimeString('en-US', { timeZone: BUSINESS_TZ, hour: 'numeric', minute: '2-digit' })}
                             </div>
-                            ${to.reason ? `<div class="timeoff-reason">${to.reason}</div>` : ''}
+                            ${to.reason ? `<div class="timeoff-reason">${escapeHtml(to.reason)}</div>` : ''}
                         </div>
                         <button class="timeoff-delete" onclick="deleteTimeOff('${to.id}')">&times;</button>
                     </div>
@@ -836,6 +861,7 @@ let clientsData = [];
 let clientPreferredServiceIds = [];
 
 async function loadClients() {
+    showSectionLoading('clientsList');
     try {
         const data = await api('/admin/clients');
         clientsData = data;
@@ -860,9 +886,9 @@ function renderClientsList() {
 
         return `
             <div class="client-card" data-client-id="${client.id}">
-                <div class="client-avatar">${initials}</div>
+                <div class="client-avatar">${escapeHtml(initials)}</div>
                 <div class="client-info">
-                    <span class="client-name">${name}</span>
+                    <span class="client-name">${escapeHtml(name)}</span>
                     <span class="client-last-visit">${lastVisit}</span>
                 </div>
                 <span class="client-visits">${visits} visits</span>
@@ -1084,10 +1110,10 @@ function populateNotes(notes) {
     notesList.innerHTML = notes.map(note => `
         <div class="note-item" data-note-id="${note.id}">
             <div class="note-header">
-                <span class="note-author">${note.author}</span>
+                <span class="note-author">${escapeHtml(note.author)}</span>
                 <span class="note-date">${formatDate(note.date, 'MMM d, yyyy')}</span>
             </div>
-            <p class="note-content">${note.content}</p>
+            <p class="note-content">${escapeHtml(note.content)}</p>
         </div>
     `).join('');
 }
@@ -1104,14 +1130,14 @@ function populateHistory(history) {
                     <span class="date-month">${date.toLocaleString('default', { month: 'short' })}</span>
                 </div>
                 <div class="history-details">
-                    <span class="history-service">${item.service}</span>
-                    <span class="history-stylist">with ${item.stylist}</span>
+                    <span class="history-service">${escapeHtml(item.service)}</span>
+                    <span class="history-stylist">with ${escapeHtml(item.stylist)}</span>
                 </div>
                 <div class="history-pricing">
                     <span class="history-price">$${item.price.toFixed(2)}</span>
                     ${hasTip ? `<span class="history-tip">+ $${item.tip.toFixed(2)} tip</span>` : ''}
                 </div>
-                <span class="history-status ${item.status}">${item.status.charAt(0).toUpperCase() + item.status.slice(1)}</span>
+                <span class="history-status ${item.status}">${escapeHtml(item.status.charAt(0).toUpperCase() + item.status.slice(1))}</span>
             </div>
         `;
     }).join('');
@@ -1121,7 +1147,7 @@ async function populatePreferences(prefs) {
     // Services - render removable tags
     const servicesContainer = document.getElementById('prefServices');
     servicesContainer.innerHTML = prefs.services.map((name, i) =>
-        `<span class="pref-tag">${name}<button class="pref-tag-remove" onclick="removePreferredService(${i})">&times;</button></span>`
+        `<span class="pref-tag">${escapeHtml(name)}<button class="pref-tag-remove" onclick="removePreferredService(${i})">&times;</button></span>`
     ).join('') + '<button class="add-pref" onclick="openClientServicesModal()">+</button>';
 
     // Stylist - populate dropdown with real stylist data
@@ -1134,7 +1160,7 @@ async function populatePreferences(prefs) {
         }
         stylistSelect.innerHTML = '<option value="">No preference</option>' +
             stylists.map(m =>
-                `<option value="${m.id}" ${m.id === currentVal ? 'selected' : ''}>${m.name}</option>`
+                `<option value="${m.id}" ${m.id === currentVal ? 'selected' : ''}>${escapeHtml(m.name)}</option>`
             ).join('');
     } catch (e) {
         console.warn('Could not load stylists for dropdown');
@@ -1274,7 +1300,7 @@ function renderClientServicesChecklist(services) {
 
     let html = '';
     sortedCategories.forEach(category => {
-        html += `<div class="service-category-section"><h4>${category.name}</h4>`;
+        html += `<div class="service-category-section"><h4>${escapeHtml(category.name)}</h4>`;
         category.services.forEach(svc => {
             html += `
                 <div class="service-check-row ${svc.is_preferred ? '' : 'unchecked'}" data-service-id="${svc.id}">
@@ -1282,7 +1308,7 @@ function renderClientServicesChecklist(services) {
                         <input type="checkbox" id="cpref_${svc.id}" ${svc.is_preferred ? 'checked' : ''}
                                onchange="toggleClientServiceRow(this, '${svc.id}')">
                     </div>
-                    <label for="cpref_${svc.id}" class="service-checkbox">${svc.name}</label>
+                    <label for="cpref_${svc.id}" class="service-checkbox">${escapeHtml(svc.name)}</label>
                     <div class="service-default-info">
                         <span class="service-default-price">$${parseFloat(svc.price).toFixed(0)}</span>
                         <span class="service-default-duration">${svc.duration_minutes} min</span>
@@ -1327,7 +1353,7 @@ async function saveClientPreferredServices() {
 
         const servicesContainer = document.getElementById('prefServices');
         servicesContainer.innerHTML = preferredServiceNames.map((name, i) =>
-            `<span class="pref-tag">${name}<button class="pref-tag-remove" onclick="removePreferredService(${i})">&times;</button></span>`
+            `<span class="pref-tag">${escapeHtml(name)}<button class="pref-tag-remove" onclick="removePreferredService(${i})">&times;</button></span>`
         ).join('') + '<button class="add-pref" onclick="openClientServicesModal()">+</button>';
 
         closeClientServicesModal();
@@ -1352,7 +1378,7 @@ async function removePreferredService(index) {
 
         const servicesContainer = document.getElementById('prefServices');
         servicesContainer.innerHTML = preferredServiceNames.map((name, i) =>
-            `<span class="pref-tag">${name}<button class="pref-tag-remove" onclick="removePreferredService(${i})">&times;</button></span>`
+            `<span class="pref-tag">${escapeHtml(name)}<button class="pref-tag-remove" onclick="removePreferredService(${i})">&times;</button></span>`
         ).join('') + '<button class="add-pref" onclick="openClientServicesModal()">+</button>';
     } catch (err) {
         console.error('Failed to remove preferred service:', err);
@@ -1693,13 +1719,13 @@ function renderTeamList(members) {
 
         return `
             <div class="team-card ${selectedTeamMemberId === member.id ? 'active' : ''}" data-member-id="${member.id}">
-                <div class="team-avatar" style="background: linear-gradient(135deg, ${colorCode}, ${lightenColor(colorCode, 20)});">
-                    ${member.avatar_url ? `<img src="${member.avatar_url}" alt="${member.name}" onerror="this.style.display='none'">` : ''}
-                    <span class="avatar-initials">${initials}</span>
+                <div class="team-avatar" style="background: linear-gradient(135deg, ${escapeHtml(colorCode)}, ${escapeHtml(lightenColor(colorCode, 20))});">
+                    ${member.avatar_url ? `<img src="${escapeHtml(member.avatar_url)}" alt="${escapeHtml(member.name)}" onerror="this.style.display='none'">` : ''}
+                    <span class="avatar-initials">${escapeHtml(initials)}</span>
                 </div>
                 <div class="team-info">
-                    <span class="team-name">${member.name}</span>
-                    <span class="team-title">${member.title || 'Team Member'}</span>
+                    <span class="team-name">${escapeHtml(member.name)}</span>
+                    <span class="team-title">${escapeHtml(member.title || 'Team Member')}</span>
                 </div>
                 <span class="team-status ${member.is_active ? 'active' : 'inactive'}">${member.is_active ? 'Active' : 'Inactive'}</span>
             </div>
@@ -1799,7 +1825,7 @@ function populateTeamMemberProfile(member) {
         const specialties = member.specialties || [];
         if (specialties.length > 0) {
             specialtiesEl.innerHTML = specialties.map(s =>
-                `<span class="specialty-tag">${s}</span>`
+                `<span class="specialty-tag">${escapeHtml(s)}</span>`
             ).join('');
         } else {
             specialtiesEl.innerHTML = '<span class="no-data">No specialties listed</span>';
@@ -1812,7 +1838,7 @@ function populateTeamMemberProfile(member) {
         const certifications = member.certifications || [];
         if (certifications.length > 0) {
             certsEl.innerHTML = certifications.map(c =>
-                `<li>${c}</li>`
+                `<li>${escapeHtml(c)}</li>`
             ).join('');
         } else {
             certsEl.innerHTML = '<li class="no-data">No certifications listed</li>';
@@ -1907,10 +1933,10 @@ function populateMemberServices(services) {
 
     container.innerHTML = services.map(category => `
         <div class="service-category-group">
-            <h4>${category.category}</h4>
+            <h4>${escapeHtml(category.category)}</h4>
             ${category.items.map(item => `
                 <div class="member-service-item">
-                    <span class="service-name">${item.name}</span>
+                    <span class="service-name">${escapeHtml(item.name)}</span>
                     <span class="service-duration">${item.duration} min</span>
                     <span class="service-price">$${item.price}</span>
                 </div>
@@ -2005,10 +2031,10 @@ async function renderMemberDayView() {
                 <div class="day-appt-block">
                     <span class="day-appt-time">${apptTime}</span>
                     <div class="day-appt-info">
-                        <span class="day-appt-service">${b.service_name}</span>
-                        <span class="day-appt-client">${b.client_name}</span>
+                        <span class="day-appt-service">${escapeHtml(b.service_name)}</span>
+                        <span class="day-appt-client">${escapeHtml(b.client_name)}</span>
                     </div>
-                    <span class="day-appt-status ${b.status}">${b.status}</span>
+                    <span class="day-appt-status ${b.status}">${escapeHtml(b.status)}</span>
                 </div>
             `;
         });
@@ -2157,9 +2183,9 @@ function populateMemberAvailability(availability) {
         if (avail) {
             hoursDiv.classList.remove('inactive');
             hoursDiv.innerHTML = `
-                <input type="time" value="${avail.start}" class="time-input start">
+                <input type="time" value="${escapeHtml(avail.start)}" class="time-input start">
                 <span class="time-separator">to</span>
-                <input type="time" value="${avail.end}" class="time-input end">
+                <input type="time" value="${escapeHtml(avail.end)}" class="time-input end">
             `;
         } else {
             hoursDiv.classList.add('inactive');
@@ -2186,7 +2212,7 @@ function populateMemberTimeOff(timeOff) {
             <div class="time-off-item" data-id="${item.id}">
                 <div class="time-off-dates">
                     <span class="date-range">${dateRange}</span>
-                    <span class="time-off-reason">${item.reason || ''}</span>
+                    <span class="time-off-reason">${item.reason ? escapeHtml(item.reason) : ''}</span>
                 </div>
                 <button class="delete-time-off" onclick="deleteMemberTimeOff(${item.id})" title="Remove">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
@@ -2211,10 +2237,10 @@ function populateMemberAppointments(appointments) {
         <div class="appointment-item">
             <div class="appt-time">${formatTime(appt.time)}</div>
             <div class="appt-details">
-                <span class="appt-client">${appt.client}</span>
-                <span class="appt-service">${appt.service}</span>
+                <span class="appt-client">${escapeHtml(appt.client)}</span>
+                <span class="appt-service">${escapeHtml(appt.service)}</span>
             </div>
-            <span class="appt-status ${appt.status}">${appt.status.charAt(0).toUpperCase() + appt.status.slice(1)}</span>
+            <span class="appt-status ${appt.status}">${escapeHtml(appt.status.charAt(0).toUpperCase() + appt.status.slice(1))}</span>
         </div>
     `).join('');
 }
@@ -2598,7 +2624,7 @@ function renderServicesChecklist(services) {
     sortedCategories.forEach(category => {
         html += `
             <div class="service-category-section">
-                <h4>${category.name}</h4>
+                <h4>${escapeHtml(category.name)}</h4>
                 ${category.services.map(svc => `
                     <div class="service-check-row ${svc.is_assigned ? '' : 'unchecked'}" data-service-id="${svc.id}">
                         <div class="service-checkbox">
@@ -2608,7 +2634,7 @@ function renderServicesChecklist(services) {
                                    onchange="toggleServiceRow(this, '${svc.id}')">
                         </div>
                         <label for="svc_${svc.id}" class="service-checkbox">
-                            ${svc.name}
+                            ${escapeHtml(svc.name)}
                         </label>
                         <div class="service-default-info">
                             <span class="service-default-price">Base: $${parseFloat(svc.price).toFixed(0)}</span>
@@ -2830,7 +2856,7 @@ function renderCategoryList(categories) {
         <div class="category-item ${selectedCategoryId === cat.id ? 'active' : ''}" data-category-id="${cat.id}">
             <span class="category-count">${cat.service_count || 0}</span>
             <div class="category-info">
-                <span class="category-name">${cat.name}</span>
+                <span class="category-name">${escapeHtml(cat.name)}</span>
             </div>
             <div class="category-actions">
                 <button class="category-action-btn" onclick="editCategory('${cat.id}')" title="Edit">
@@ -2902,7 +2928,7 @@ function renderServicesTable(services) {
 
     tbody.innerHTML = services.map(svc => `
         <tr data-service-id="${svc.id}">
-            <td class="service-name-cell">${svc.name}</td>
+            <td class="service-name-cell">${escapeHtml(svc.name)}</td>
             <td>${svc.duration_minutes} min</td>
             <td>$${parseFloat(svc.price).toFixed(2)}</td>
             <td>
@@ -3049,7 +3075,7 @@ function populateServiceCategoryDropdown() {
 
     select.innerHTML = '<option value="">Select a category...</option>' +
         allCategoriesData.map(cat => `
-            <option value="${cat.id}">${cat.name}</option>
+            <option value="${cat.id}">${escapeHtml(cat.name)}</option>
         `).join('');
 }
 

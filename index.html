@@ -4,6 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Book an Appointment | Ember & Roots Wellness</title>
+    <meta name="description" content="Book your wellness appointment at Ember & Roots in Murrysville, PA. Hair styling, coloring, and holistic beauty services.">
+    <meta name="theme-color" content="#1a1612">
+    <meta property="og:title" content="Book an Appointment | Ember & Roots Wellness">
+    <meta property="og:description" content="Select a team member and book your wellness experience at Ember & Roots.">
+    <meta property="og:type" content="website">
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Questrial&display=swap" rel="stylesheet">
@@ -17,7 +23,7 @@
 
     <!-- Simple Header -->
     <header class="booking-header">
-        <a href="#" class="logo">
+        <a href="/" class="logo">
             <div class="logo-text">
                 <span class="logo-ember">Ember &</span>
                 <span class="logo-roots">Roots</span>
@@ -41,7 +47,7 @@
         </section>
 
         <!-- Team Member Selection -->
-        <section class="team-section" id="teamSection">
+        <section class="team-section" id="teamSection" role="region" aria-label="Select a team member">
             <div class="team-grid" id="teamGrid">
                 <!-- Team members loaded by JS -->
                 <div class="loading-spinner"></div>
@@ -63,7 +69,7 @@
                 <!-- Booking Steps -->
                 <div class="booking-steps-container" id="bookingSteps">
                     <!-- Step 1: Select Service -->
-                    <div class="booking-step step-1 active" data-step="1">
+                    <div class="booking-step step-1 active" data-step="1" role="region" aria-label="Select a service">
                         <div class="step-header">
                             <span class="step-number">01</span>
                             <h3>Select a Service</h3>
@@ -75,7 +81,7 @@
                     </div>
 
                     <!-- Step 2: Select Date -->
-                    <div class="booking-step step-2" data-step="2">
+                    <div class="booking-step step-2" data-step="2" role="region" aria-label="Choose date and time">
                         <button class="step-back" id="backToStep1">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <path d="M19 12H5M12 19l-7-7 7-7"/>
@@ -86,11 +92,11 @@
                             <span class="step-number">02</span>
                             <h3>Choose a Date</h3>
                         </div>
-                        <div class="calendar">
+                        <div class="calendar" role="application">
                             <div class="calendar-header">
-                                <button class="cal-nav prev" id="calPrev">←</button>
-                                <span class="cal-month" id="calMonth">February 2026</span>
-                                <button class="cal-nav next" id="calNext">→</button>
+                                <button class="cal-nav prev" id="calPrev" aria-label="Previous month">←</button>
+                                <span class="cal-month" id="calMonth" aria-live="polite">February 2026</span>
+                                <button class="cal-nav next" id="calNext" aria-label="Next month">→</button>
                             </div>
                             <div class="calendar-weekdays">
                                 <span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span>
@@ -117,7 +123,7 @@
                     </div>
 
                     <!-- Step 4: New or Returning (Email/Phone) -->
-                    <div class="booking-step step-4" data-step="4">
+                    <div class="booking-step step-4" data-step="4" role="region" aria-label="Your information">
                         <button class="step-back" id="backToStep3">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <path d="M19 12H5M12 19l-7-7 7-7"/>
@@ -137,9 +143,11 @@
                                 </div>
                             </div>
                             <div class="auth-input-group" id="authEmailGroup">
+                                <label for="authEmail" class="sr-only">Email address</label>
                                 <input type="email" id="authEmail" placeholder="your@email.com" autocomplete="email">
                             </div>
                             <div class="auth-input-group" id="authPhoneGroup" style="display: none;">
+                                <label for="authPhone" class="sr-only">Phone number</label>
                                 <input type="tel" id="authPhone" placeholder="(555) 123-4567" autocomplete="tel">
                             </div>
                             <div id="authError" class="error-message" style="display: none;"></div>
@@ -161,13 +169,13 @@
                         </div>
                         <div class="auth-step-content">
                             <p class="otp-message" id="otpMessage">Enter the 6-digit code sent to your email</p>
-                            <div class="otp-input-group" id="otpInputs">
-                                <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" autocomplete="one-time-code">
-                                <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]">
-                                <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]">
-                                <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]">
-                                <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]">
-                                <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]">
+                            <div class="otp-input-group" id="otpInputs" role="group" aria-label="6-digit verification code">
+                                <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" autocomplete="one-time-code" aria-label="Digit 1">
+                                <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" aria-label="Digit 2">
+                                <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" aria-label="Digit 3">
+                                <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" aria-label="Digit 4">
+                                <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" aria-label="Digit 5">
+                                <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" aria-label="Digit 6">
                             </div>
                             <div id="otpError" class="error-message" style="display: none;"></div>
                             <button class="otp-resend" id="resendOTP" disabled>Resend code in <span id="resendTimer">60</span>s</button>
@@ -328,7 +336,7 @@
                 </div>
 
                 <!-- Progress Bar -->
-                <div class="booking-progress" id="bookingProgress">
+                <div class="booking-progress" id="bookingProgress" role="progressbar" aria-valuemin="1" aria-valuemax="4" aria-valuenow="1" aria-label="Booking progress">
                     <span class="progress-dot active"></span>
                     <span class="progress-dot"></span>
                     <span class="progress-dot"></span>
@@ -355,6 +363,7 @@
         </div>
     </footer>
 
-    <script src="booking-page.js"></script>
+    <script src="utils.js" defer></script>
+    <script src="booking-page.js" defer></script>
 </body>
 </html>

@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard | Ember & Roots Wellness</title>
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="description" content="Ember & Roots Wellness admin dashboard">
+    <meta name="theme-color" content="#1a1612">
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
@@ -11,6 +15,8 @@
 </head>
 <body>
     <div id="app">
+        <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle menu">&#9776;</button>
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
         <!-- Login Screen -->
         <div id="loginScreen" class="login-screen">
             <div class="login-card">
@@ -1740,6 +1746,7 @@
         </div>
     </div>
 
-    <script src="admin.js?v=7"></script>
+    <script src="/utils.js" defer></script>
+    <script src="admin.js?v=7" defer></script>
 </body>
 </html>

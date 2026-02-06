@@ -4,7 +4,7 @@
  * Enhanced Flow: Team Member → Service → Date → Time → OTP Auth → Profile → Book It!
  */
 
-const API_URL = 'http://localhost:3001/api';
+const API_URL = '/api';
 
 // Booking State
 let bookingState = {
@@ -112,8 +112,8 @@ function renderServiceCategories(categories) {
                     ${icons[cat.category_name] || icons['Facial + Body Treatments']}
                 </div>
                 <div class="category-info">
-                    <h3>${cat.category_name}</h3>
-                    <p>${cat.category_description || ''}</p>
+                    <h3>${escapeHtml(cat.category_name)}</h3>
+                    <p>${escapeHtml(cat.category_description || '')}</p>
                 </div>
                 <span class="category-toggle">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -125,10 +125,10 @@ function renderServiceCategories(categories) {
                 ${cat.services.map(svc => `
                     <div class="service-item" data-service-id="${svc.id}">
                         <div class="service-info">
-                            <h4>${svc.name}</h4>
+                            <h4>${escapeHtml(svc.name)}</h4>
                             <p class="service-duration">${formatDuration(svc.duration)}</p>
                         </div>
-                        <div class="service-price">$${svc.price}</div>
+                        <div class="service-price">$${escapeHtml(String(svc.price))}</div>
                         <button class="service-book">Book</button>
                     </div>
                 `).join('')}
@@ -321,15 +321,15 @@ async function loadTeamMembers() {
         container.innerHTML = stylists
             .filter(s => s.is_active && s.display_on_website)
             .map(stylist => `
-                <div class="team-member-card" data-id="${stylist.id}" data-name="${stylist.name}">
+                <div class="team-member-card" data-id="${stylist.id}" data-name="${escapeHtml(stylist.name)}">
                     <div class="member-avatar">
                         ${stylist.avatar_url
-                            ? `<img src="${stylist.avatar_url}" alt="${stylist.name}">`
-                            : stylist.name.charAt(0)}
+                            ? `<img src="${escapeHtml(stylist.avatar_url)}" alt="${escapeHtml(stylist.name)}">`
+                            : escapeHtml(stylist.name.charAt(0))}
                     </div>
                     <div class="member-info">
-                        <span class="member-name">${stylist.name}</span>
-                        <span class="member-title">${stylist.title || 'Wellness Specialist'}</span>
+                        <span class="member-name">${escapeHtml(stylist.name)}</span>
+                        <span class="member-title">${escapeHtml(stylist.title || 'Wellness Specialist')}</span>
                     </div>
                     <div class="member-check">✓</div>
                 </div>
@@ -385,12 +385,12 @@ async function loadTeamMemberServices() {
         }
 
         container.innerHTML = services.map(svc => `
-            <div class="service-option" data-id="${svc.id}" data-name="${svc.name}" data-duration="${svc.duration}" data-price="${svc.price}">
+            <div class="service-option" data-id="${svc.id}" data-name="${escapeHtml(svc.name)}" data-duration="${svc.duration}" data-price="${svc.price}">
                 <div class="service-info">
-                    <span class="service-name">${svc.name}</span>
+                    <span class="service-name">${escapeHtml(svc.name)}</span>
                     <span class="service-meta">${formatDuration(svc.duration)}</span>
                 </div>
-                <span class="service-price">$${svc.price}</span>
+                <span class="service-price">$${escapeHtml(String(svc.price))}</span>
             </div>
         `).join('');
 
@@ -531,7 +531,7 @@ async function loadTimeSlots() {
 
         container.innerHTML = slots.map(slot => `
             <button class="time-slot" data-start="${slot.start}" data-end="${slot.end}">
-                ${slot.display}
+                ${escapeHtml(slot.display)}
             </button>
         `).join('');
 
@@ -906,7 +906,7 @@ function prepareConfirmation() {
 
         if (client.avatarUrl) {
             document.getElementById('confirmAvatar').innerHTML =
-                `<img src="${client.avatarUrl}" alt="Avatar" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">`;
+                `<img src="${escapeHtml(client.avatarUrl)}" alt="Avatar" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">`;
         }
     }
 

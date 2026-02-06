@@ -7,6 +7,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { query, getClient } from '../config/database.js';
 import { authenticate } from '../middleware/auth.js';
 import { sendBookingNotifications } from '../services/notifications.js';
+import { body, param, validationResult } from 'express-validator';
 
 const router = Router();
 
@@ -22,11 +23,28 @@ function generateConfirmationCode() {
     return code;
 }
 
+function handleValidationErrors(req, res, next) {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array().map(e => e.msg) });
+    }
+    next();
+}
+
 /**
  * POST /api/bookings
  * Create a new booking (public endpoint)
  */
-router.post('/', async (req, res, next) => {
+router.post('/', [
+    body('stylist_id').isUUID().withMessage('Invalid stylist ID'),
+    body('service_id').isUUID().withMessage('Invalid service ID'),
+    body('start_datetime').isISO8601().withMessage('Invalid date format'),
+    body('client_name').isString().trim().isLength({ min: 1, max: 100 }).withMessage('Client name required (max 100 chars)'),
+    body('client_email').isEmail().normalizeEmail().withMessage('Valid email required'),
+    body('client_phone').optional().isMobilePhone('any').withMessage('Invalid phone number'),
+    body('client_notes').optional().isString().isLength({ max: 500 }).withMessage('Notes max 500 chars'),
+    handleValidationErrors
+], async (req, res, next) => {
     const client = await getClient();
 
     try {
@@ -39,11 +57,6 @@ router.post('/', async (req, res, next) => {
             client_phone,
             client_notes
         } = req.body;
-
-        // Validation
-        if (!stylist_id || !service_id || !start_datetime || !client_name || !client_email) {
-            return res.status(400).json({ error: 'Missing required fields' });
-        }
 
         await client.query('BEGIN');
 
@@ -256,14 +269,33 @@ router.post('/:id/cancel', async (req, res, next) => {
         const { id } = req.params;
         const { confirmation_code, reason } = req.body;
 
-        // Verify ownership (either by confirmation code or admin auth)
         let booking;
+
+        // Try public auth via confirmation code
         if (confirmation_code) {
             const result = await query(
                 `SELECT * FROM bookings WHERE id = $1 AND confirmation_code = $2`,
                 [id, confirmation_code.toUpperCase()]
             );
             booking = result.rows[0];
+        }
+
+        // Fallback: try admin JWT auth
+        if (!booking) {
+            const authHeader = req.headers.authorization;
+            if (!authHeader || !authHeader.startsWith('Bearer ')) {
+                return res.status(401).json({ error: 'Confirmation code or admin authentication required' });
+            }
+            try {
+                const token = authHeader.split(' ')[1];
+                const jwt = (await import('jsonwebtoken')).default;
+                jwt.verify(token, process.env.JWT_SECRET, { algorithms: ['HS256'] });
+                // Admin verified — fetch booking by ID only
+                const result = await query(`SELECT * FROM bookings WHERE id = $1`, [id]);
+                booking = result.rows[0];
+            } catch {
+                return res.status(401).json({ error: 'Invalid authentication' });
+            }
         }
 
         if (!booking) {
@@ -274,7 +306,6 @@ router.post('/:id/cancel', async (req, res, next) => {
             return res.status(400).json({ error: 'Booking is already cancelled' });
         }
 
-        // Update booking
         await query(`
             UPDATE bookings
             SET status = 'cancelled',
@@ -297,14 +328,9 @@ router.post('/:id/cancel', async (req, res, next) => {
  */
 router.get('/', authenticate, async (req, res, next) => {
     try {
-        const {
-            stylist_id,
-            status,
-            date_from,
-            date_to,
-            limit = 50,
-            offset = 0
-        } = req.query;
+        const { stylist_id, status, date_from, date_to } = req.query;
+        const limit = Math.min(Math.max(parseInt(req.query.limit) || 50, 1), 100);
+        const offset = Math.max(parseInt(req.query.offset) || 0, 0);
 
         let whereClause = 'WHERE 1=1';
         const params = [];
@@ -370,6 +396,20 @@ router.patch('/:id', authenticate, async (req, res, next) => {
     try {
         const { id } = req.params;
         const { status, internal_notes, tip_amount } = req.body;
+
+        // IDOR protection: stylists can only update their own bookings
+        if (req.user.role === 'stylist' && req.user.stylist_id) {
+            const ownerCheck = await query(
+                `SELECT stylist_id FROM bookings WHERE id = $1`,
+                [id]
+            );
+            if (ownerCheck.rows.length === 0) {
+                return res.status(404).json({ error: 'Booking not found' });
+            }
+            if (ownerCheck.rows[0].stylist_id !== req.user.stylist_id) {
+                return res.status(403).json({ error: 'Cannot modify another stylist\'s booking' });
+            }
+        }
 
         const updates = [];
         const params = [];

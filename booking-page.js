@@ -3,7 +3,46 @@
  * Simple, focused booking experience
  */
 
-const API_URL = 'http://localhost:3001/api';
+const API_URL = '/api';
+
+async function safeFetch(url, options = {}) {
+    const response = await fetch(url, options);
+    if (!response.ok) {
+        const contentType = response.headers.get('content-type');
+        if (contentType && contentType.includes('application/json')) {
+            const data = await response.json();
+            throw new Error(data.error || data.errors?.join(', ') || `Request failed (${response.status})`);
+        }
+        throw new Error(`Request failed (${response.status})`);
+    }
+    const contentType = response.headers.get('content-type');
+    if (!contentType || !contentType.includes('application/json')) {
+        throw new Error('Unexpected response format');
+    }
+    return response.json();
+}
+
+function showToast(message, type = 'info') {
+    let container = document.getElementById('toastContainer');
+    if (!container) {
+        container = document.createElement('div');
+        container.id = 'toastContainer';
+        container.style.cssText = 'position:fixed;top:20px;right:20px;z-index:9999;display:flex;flex-direction:column;gap:8px;';
+        document.body.appendChild(container);
+    }
+    const toast = document.createElement('div');
+    toast.className = `toast toast-${type}`;
+    toast.textContent = message;
+    container.appendChild(toast);
+    setTimeout(() => { toast.classList.add('toast-exit'); setTimeout(() => toast.remove(), 300); }, 4000);
+}
+
+let currentAbortController = null;
+function getAbortSignal() {
+    if (currentAbortController) currentAbortController.abort();
+    currentAbortController = new AbortController();
+    return currentAbortController.signal;
+}
 
 // Booking State
 let bookingState = {
@@ -35,8 +74,7 @@ async function loadTeamMembers() {
     const container = document.getElementById('teamGrid');
 
     try {
-        const response = await fetch(`${API_URL}/stylists`);
-        const stylists = await response.json();
+        const stylists = await safeFetch(`${API_URL}/stylists`);
 
         if (stylists.length === 0) {
             container.innerHTML = '<p style="text-align: center; color: var(--sage); grid-column: 1/-1;">No team members available at this time.</p>';
@@ -44,16 +82,16 @@ async function loadTeamMembers() {
         }
 
         container.innerHTML = stylists.map(stylist => `
-            <div class="team-card" data-id="${stylist.id}" data-name="${stylist.name}">
+            <div class="team-card" data-id="${stylist.id}" data-name="${escapeHtml(stylist.name)}">
                 <div class="team-card-avatar">
                     ${stylist.avatar_url
-                        ? `<img src="${stylist.avatar_url}" alt="${stylist.name}">`
-                        : stylist.name.charAt(0)}
+                        ? `<img src="${escapeHtml(stylist.avatar_url)}" alt="${escapeHtml(stylist.name)}">`
+                        : escapeHtml(stylist.name.charAt(0))}
                 </div>
-                <h3 class="team-card-name">${stylist.name}</h3>
-                <p class="team-card-title">${stylist.title || 'Wellness Specialist'}</p>
-                ${stylist.bio ? `<p class="team-card-bio">${stylist.bio}</p>` : ''}
-                <button class="team-card-cta">Book with ${stylist.name.split(' ')[0]}</button>
+                <h3 class="team-card-name">${escapeHtml(stylist.name)}</h3>
+                <p class="team-card-title">${stylist.title ? escapeHtml(stylist.title) : 'Wellness Specialist'}</p>
+                ${stylist.bio ? `<p class="team-card-bio">${escapeHtml(stylist.bio)}</p>` : ''}
+                <button class="team-card-cta">Book with ${escapeHtml(stylist.name.split(' ')[0])}</button>
             </div>
         `).join('');
 
@@ -213,6 +251,10 @@ function goToStep(step) {
         dot.classList.toggle('active', index < step);
     });
 
+    // Update progressbar ARIA
+    const progressBar = document.querySelector('[role="progressbar"]');
+    if (progressBar) progressBar.setAttribute('aria-valuenow', step);
+
     // Load step-specific data
     if (step === 2) {
         renderCalendar();
@@ -232,10 +274,10 @@ function goToStep(step) {
 async function loadTeamMemberServices() {
     const container = document.getElementById('serviceSelection');
     container.innerHTML = '<div class="loading-spinner"></div>';
+    const signal = getAbortSignal();
 
     try {
-        const response = await fetch(`${API_URL}/stylists/${bookingState.teamMember.id}`);
-        const data = await response.json();
+        const data = await safeFetch(`${API_URL}/stylists/${bookingState.teamMember.id}`, { signal });
         const services = data.services || [];
 
         if (services.length === 0) {
@@ -244,12 +286,12 @@ async function loadTeamMemberServices() {
         }
 
         container.innerHTML = services.map(svc => `
-            <div class="service-option" data-id="${svc.id}" data-name="${svc.name}" data-duration="${svc.duration}" data-price="${svc.price}">
+            <div class="service-option" data-id="${svc.id}" data-name="${escapeHtml(svc.name)}" data-duration="${svc.duration}" data-price="${svc.price}">
                 <div class="service-info">
-                    <span class="service-name">${svc.name}</span>
+                    <span class="service-name">${escapeHtml(svc.name)}</span>
                     <span class="service-meta">${formatDuration(svc.duration)}</span>
                 </div>
-                <span class="service-price">$${svc.price}</span>
+                <span class="service-price">$${escapeHtml(String(svc.price))}</span>
             </div>
         `).join('');
 
@@ -258,6 +300,7 @@ async function loadTeamMemberServices() {
         });
 
     } catch (err) {
+        if (err.name === 'AbortError') return;
         console.error('Failed to load services:', err);
         container.innerHTML = '<p style="text-align: center; color: var(--sage);">Unable to load services</p>';
     }
@@ -315,8 +358,7 @@ async function renderCalendar() {
     if (bookingState.teamMember?.id && bookingState.service?.id) {
         try {
             const monthStr = `${year}-${String(month + 1).padStart(2, '0')}`;
-            const response = await fetch(`${API_URL}/availability/${bookingState.teamMember.id}/${bookingState.service.id}?month=${monthStr}`);
-            const data = await response.json();
+            const data = await safeFetch(`${API_URL}/availability/${bookingState.teamMember.id}/${bookingState.service.id}?month=${monthStr}`);
             availableDates = data.available_dates || [];
         } catch (err) {
             console.log('Could not load availability');
@@ -329,6 +371,7 @@ async function renderCalendar() {
     for (let i = 0; i < firstDay; i++) {
         const emptyDay = document.createElement('span');
         emptyDay.className = 'day inactive';
+        emptyDay.setAttribute('role', 'gridcell');
         calendarDays.appendChild(emptyDay);
     }
 
@@ -337,9 +380,16 @@ async function renderCalendar() {
         const dayEl = document.createElement('span');
         dayEl.className = 'day';
         dayEl.textContent = day;
+        dayEl.setAttribute('role', 'gridcell');
 
         const dayDate = new Date(year, month, day);
         const dateStr = dayDate.toISOString().split('T')[0];
+
+        // Full date label for screen readers
+        const fullDateLabel = dayDate.toLocaleDateString('en-US', {
+            weekday: 'long', month: 'long', day: 'numeric', year: 'numeric'
+        });
+        dayEl.setAttribute('aria-label', fullDateLabel);
 
         if (dayDate < today) {
             dayEl.classList.add('inactive');
@@ -371,11 +421,11 @@ async function renderCalendar() {
 async function loadTimeSlots() {
     const container = document.getElementById('timeSlots');
     container.innerHTML = '<div class="loading-spinner"></div>';
+    const signal = getAbortSignal();
 
     try {
         const dateStr = bookingState.date.toISOString().split('T')[0];
-        const response = await fetch(`${API_URL}/availability/${bookingState.teamMember.id}/${bookingState.service.id}/slots?date=${dateStr}`);
-        const data = await response.json();
+        const data = await safeFetch(`${API_URL}/availability/${bookingState.teamMember.id}/${bookingState.service.id}/slots?date=${dateStr}`, { signal });
         const slots = data.slots || [];
 
         if (slots.length === 0) {
@@ -384,8 +434,8 @@ async function loadTimeSlots() {
         }
 
         container.innerHTML = slots.map(slot => `
-            <button class="time-slot" data-start="${slot.start}" data-end="${slot.end}">
-                ${slot.display}
+            <button class="time-slot" data-start="${escapeHtml(slot.start)}" data-end="${escapeHtml(slot.end)}">
+                ${escapeHtml(slot.display)}
             </button>
         `).join('');
 
@@ -407,6 +457,7 @@ async function loadTimeSlots() {
         });
 
     } catch (err) {
+        if (err.name === 'AbortError') return;
         console.error('Failed to load time slots:', err);
         container.innerHTML = '<p style="text-align: center; color: var(--sage);">Unable to load time slots</p>';
     }
@@ -444,6 +495,20 @@ async function sendOTP() {
         return;
     }
 
+    // Client-side validation
+    if (email) {
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+            showToast('Please enter a valid email address', 'error');
+            return;
+        }
+    }
+    if (phone) {
+        if (phone.replace(/\D/g, '').length < 10) {
+            showToast('Please enter a valid phone number', 'error');
+            return;
+        }
+    }
+
     bookingState.authContact = contact;
 
     btn.disabled = true;
@@ -451,7 +516,7 @@ async function sendOTP() {
     btn.textContent = '';
 
     try {
-        const response = await fetch(`${API_URL}/client-auth/send-otp`, {
+        const data = await safeFetch(`${API_URL}/client-auth/send-otp`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -459,12 +524,6 @@ async function sendOTP() {
                 phone: bookingState.authMethod === 'phone' ? contact : null
             })
         });
-
-        const data = await response.json();
-
-        if (!response.ok) {
-            throw new Error(data.error || 'Failed to send code');
-        }
 
         bookingState.isReturning = data.isReturning;
 
@@ -567,7 +626,7 @@ async function verifyOTP() {
     btn.textContent = '';
 
     try {
-        const response = await fetch(`${API_URL}/client-auth/verify-otp`, {
+        const data = await safeFetch(`${API_URL}/client-auth/verify-otp`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -576,12 +635,6 @@ async function verifyOTP() {
                 code
             })
         });
-
-        const data = await response.json();
-
-        if (!response.ok) {
-            throw new Error(data.error || 'Invalid code');
-        }
 
         bookingState.sessionToken = data.sessionToken;
         bookingState.isReturning = data.isReturning;
@@ -642,7 +695,7 @@ async function resendOTP() {
     btn.textContent = 'Sending...';
 
     try {
-        const response = await fetch(`${API_URL}/client-auth/send-otp`, {
+        const data = await safeFetch(`${API_URL}/client-auth/send-otp`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -650,8 +703,6 @@ async function resendOTP() {
                 phone: bookingState.authMethod === 'phone' ? bookingState.authContact : null
             })
         });
-
-        const data = await response.json();
 
         // Dev mode: auto-fill new code on resend
         if (data.devMode && data.devCode) {
@@ -719,7 +770,7 @@ async function saveNewCustomerProfile(e) {
     btn.textContent = '';
 
     try {
-        const response = await fetch(`${API_URL}/client-auth/register`, {
+        const data = await safeFetch(`${API_URL}/client-auth/register`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -738,12 +789,6 @@ async function saveNewCustomerProfile(e) {
                 tiktokUrl: document.getElementById('profileTiktok').value.trim()
             })
         });
-
-        const data = await response.json();
-
-        if (!response.ok) {
-            throw new Error(data.error || 'Registration failed');
-        }
 
         bookingState.client = data.client;
         bookingState.sessionToken = data.sessionToken;
@@ -776,7 +821,7 @@ async function prepareConfirmation() {
 
         if (client.avatarUrl) {
             document.getElementById('confirmAvatar').innerHTML =
-                `<img src="${client.avatarUrl}" alt="Avatar" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">`;
+                `<img src="${escapeHtml(client.avatarUrl)}" alt="Avatar" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">`;
         }
     }
 
@@ -794,14 +839,13 @@ async function prepareConfirmation() {
     // Re-validate the selected slot is still available
     try {
         const dateStr = bookingState.date.toISOString().split('T')[0];
-        const response = await fetch(`${API_URL}/availability/${bookingState.teamMember.id}/${bookingState.service.id}/slots?date=${dateStr}`);
-        const data = await response.json();
+        const data = await safeFetch(`${API_URL}/availability/${bookingState.teamMember.id}/${bookingState.service.id}/slots?date=${dateStr}`);
         const slots = data.slots || [];
         const selectedStart = bookingState.slot.start;
         const stillAvailable = slots.some(s => s.start === selectedStart);
 
         if (!stillAvailable) {
-            alert('Sorry, the time you selected is no longer available. Please choose a different time.');
+            showToast('Sorry, the time you selected is no longer available. Please choose a different time.', 'error');
             goToStep(3);
             loadTimeSlots();
             return;
@@ -822,7 +866,7 @@ async function submitBooking() {
     btn.textContent = '';
 
     try {
-        const response = await fetch(`${API_URL}/bookings`, {
+        const result = await safeFetch(`${API_URL}/bookings`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -838,12 +882,6 @@ async function submitBooking() {
                 client_id: bookingState.client.id
             })
         });
-
-        const result = await response.json();
-
-        if (!response.ok || !result.success) {
-            throw new Error(result.error || 'Booking failed');
-        }
 
         document.getElementById('finalCode').textContent = result.booking?.confirmation_code || '';
         document.getElementById('finalService').textContent = bookingState.service.name;
@@ -862,11 +900,11 @@ async function submitBooking() {
                             err.message.toLowerCase().includes('conflict') ||
                             err.message.toLowerCase().includes('slot');
         if (isSlotTaken) {
-            alert('Sorry, this time slot was just booked by someone else. Let\'s pick a new time.');
+            showToast('Sorry, this time slot was just booked by someone else. Let\'s pick a new time.', 'error');
             goToStep(3);
             loadTimeSlots();
         } else {
-            alert('Booking failed: ' + err.message);
+            showToast('Booking failed: ' + err.message, 'error');
         }
     } finally {
         btn.disabled = false;

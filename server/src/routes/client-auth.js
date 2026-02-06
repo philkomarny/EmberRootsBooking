@@ -5,6 +5,7 @@
 
 import express from 'express';
 import crypto from 'crypto';
+import { body, validationResult } from 'express-validator';
 import pool from '../config/database.js';
 import { sendOTPEmail, sendOTPSMS, isEmailConfigured } from '../services/notifications.js';
 
@@ -14,7 +15,7 @@ const router = express.Router();
  * Generate 6-digit OTP code
  */
 function generateOTP() {
-    return Math.floor(100000 + Math.random() * 900000).toString();
+    return crypto.randomInt(100000, 1000000).toString();
 }
 
 /**
@@ -24,11 +25,23 @@ function generateSessionToken() {
     return crypto.randomBytes(32).toString('hex');
 }
 
+function handleValidationErrors(req, res, next) {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array().map(e => e.msg) });
+    }
+    next();
+}
+
 /**
  * POST /api/client-auth/send-otp
  * Send OTP to email or phone
  */
-router.post('/send-otp', async (req, res) => {
+router.post('/send-otp', [
+    body('email').optional().isEmail().normalizeEmail().withMessage('Invalid email format'),
+    body('phone').optional().isMobilePhone('any').withMessage('Invalid phone format'),
+    handleValidationErrors
+], async (req, res) => {
     const { email, phone } = req.body;
 
     if (!email && !phone) {
@@ -85,7 +98,7 @@ router.post('/send-otp', async (req, res) => {
         };
 
         // Dev mode: include OTP code in response when email/SMS is not configured
-        if (!sent && process.env.NODE_ENV === 'development') {
+        if (!sent && process.env.ENABLE_DEV_OTP === 'true') {
             response.devCode = code;
             response.devMode = true;
         }
@@ -104,7 +117,12 @@ router.post('/send-otp', async (req, res) => {
  * POST /api/client-auth/verify-otp
  * Verify OTP and return session
  */
-router.post('/verify-otp', async (req, res) => {
+router.post('/verify-otp', [
+    body('code').isString().isLength({ min: 6, max: 6 }).isNumeric().withMessage('Code must be 6 digits'),
+    body('email').optional().isEmail().normalizeEmail().withMessage('Invalid email format'),
+    body('phone').optional().isMobilePhone('any').withMessage('Invalid phone format'),
+    handleValidationErrors
+], async (req, res) => {
     const { email, phone, code } = req.body;
 
     if (!code || (!email && !phone)) {
@@ -114,6 +132,21 @@ router.post('/verify-otp', async (req, res) => {
     const client = await pool.connect();
 
     try {
+        // Check for brute-force attempts (5 max in last 15 minutes)
+        const contactField = email ? 'client_email' : 'client_phone';
+        const contactValue = email ? email.toLowerCase() : phone;
+        const attemptCheck = await client.query(
+            `SELECT COALESCE(SUM(attempts), 0)::int as total_attempts
+             FROM client_otp_codes
+             WHERE ${contactField} = $1
+             AND created_at > NOW() - INTERVAL '15 minutes'`,
+            [contactValue]
+        );
+        if (attemptCheck.rows[0].total_attempts >= 5) {
+            client.release();
+            return res.status(429).json({ error: 'Too many failed attempts. Please wait 15 minutes.' });
+        }
+
         // Find valid OTP
         let otpQuery = `
             SELECT id FROM client_otp_codes
@@ -134,6 +167,17 @@ router.post('/verify-otp', async (req, res) => {
         const otpResult = await client.query(otpQuery, params);
 
         if (otpResult.rows.length === 0) {
+            // Increment attempt counter on most recent OTP for this contact
+            await client.query(
+                `UPDATE client_otp_codes SET attempts = COALESCE(attempts, 0) + 1
+                 WHERE id = (
+                     SELECT id FROM client_otp_codes
+                     WHERE ${contactField} = $1
+                     ORDER BY created_at DESC LIMIT 1
+                 )`,
+                [contactValue]
+            );
+            client.release();
             return res.status(400).json({ error: 'Invalid or expired code' });
         }
 
@@ -231,6 +275,21 @@ router.post('/register', async (req, res) => {
 
     try {
         await client.query('BEGIN');
+
+        // Verify that a recently verified OTP exists for this contact
+        const otpCheck = await client.query(
+            `SELECT id FROM client_otp_codes
+             WHERE verified_at IS NOT NULL
+             AND verified_at > NOW() - INTERVAL '30 minutes'
+             AND (client_email = $1 OR client_phone = $2)
+             LIMIT 1`,
+            [email?.toLowerCase() || null, phone || null]
+        );
+        if (otpCheck.rows.length === 0) {
+            await client.query('ROLLBACK');
+            client.release();
+            return res.status(401).json({ error: 'OTP verification required before registration' });
+        }
 
         // Check if client already exists
         let existingClient = null;

@@ -158,7 +158,8 @@ async function seed() {
             stylistIds[stylist.name] = stylistId;
 
             // Create admin user for stylist
-            const passwordHash = await bcrypt.hash('changeme123', 10);
+            const seedPassword = process.env.SEED_ADMIN_PASSWORD || 'changeme123';
+            const passwordHash = await bcrypt.hash(seedPassword, 10);
             await client.query(
                 `INSERT INTO admin_users (stylist_id, email, password_hash, role)
                  VALUES ($1, $2, $3, $4)
@@ -260,8 +261,9 @@ async function seed() {
         console.log(`   - ${Object.keys(serviceIds).length} services`);
         console.log(`   - ${Object.keys(stylistIds).length} stylists`);
         console.log('\n🔐 Admin Logins:');
-        console.log('   - emily@emberandroots.com / changeme123 (owner)');
-        console.log('   - jessika@emberandroots.com / changeme123 (stylist)');
+        const pw = process.env.SEED_ADMIN_PASSWORD || 'changeme123';
+        console.log(`   - emily@emberandroots.com / ${pw} (owner)`);
+        console.log(`   - jessika@emberandroots.com / ${pw} (stylist)`);
 
     } catch (err) {
         await client.query('ROLLBACK');

@@ -70,6 +70,9 @@ const migrations = [
     `CREATE INDEX IF NOT EXISTS idx_clients_phone ON clients(phone)`,
     `CREATE INDEX IF NOT EXISTS idx_client_preferred_services_client ON client_preferred_services(client_id)`,
 
+    // 6. Add attempts column for brute-force protection
+    `ALTER TABLE client_otp_codes ADD COLUMN IF NOT EXISTS attempts INTEGER DEFAULT 0`,
+
     // 5. Cleanup expired OTP codes function
     `CREATE OR REPLACE FUNCTION cleanup_expired_otps()
     RETURNS void AS $$
