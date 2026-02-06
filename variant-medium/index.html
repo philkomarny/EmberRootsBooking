@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ember & Roots Wellness | Murrysville, PA</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Ambient background -->
+    <div class="ambient-glow"></div>
+    <div class="texture-overlay"></div>
+
+    <!-- Animated Roots Background -->
+    <div class="roots-background">
+        <svg class="roots-svg" viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <linearGradient id="rootGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" stop-color="currentColor" stop-opacity="0.1"/>
+                    <stop offset="100%" stop-color="currentColor" stop-opacity="0.03"/>
+                </linearGradient>
+            </defs>
+            <!-- Root system 1 - left side -->
+            <g class="root-group root-1" fill="none" stroke="url(#rootGradient)" stroke-linecap="round">
+                <path class="root-main" d="M200 -50 Q180 150, 220 300 Q260 450, 200 600 Q140 750, 180 900 Q220 1050, 160 1200" stroke-width="3"/>
+                <path class="root-branch" d="M200 100 Q120 180, 80 300" stroke-width="2"/>
+                <path class="root-branch" d="M220 250 Q300 320, 340 450" stroke-width="2"/>
+                <path class="root-branch" d="M200 400 Q100 480, 60 600" stroke-width="1.5"/>
+                <path class="root-branch" d="M180 550 Q260 620, 300 750" stroke-width="1.5"/>
+                <path class="root-tendril" d="M80 300 Q40 380, 20 480" stroke-width="1"/>
+                <path class="root-tendril" d="M340 450 Q380 520, 400 620" stroke-width="1"/>
+            </g>
+            <!-- Root system 2 - right side -->
+            <g class="root-group root-2" fill="none" stroke="url(#rootGradient)" stroke-linecap="round">
+                <path class="root-main" d="M1720 -100 Q1750 100, 1700 280 Q1650 460, 1720 640 Q1790 820, 1740 1000 Q1690 1180, 1750 1300" stroke-width="3"/>
+                <path class="root-branch" d="M1720 80 Q1820 160, 1860 300" stroke-width="2"/>
+                <path class="root-branch" d="M1700 220 Q1600 300, 1560 450" stroke-width="2"/>
+                <path class="root-branch" d="M1720 480 Q1820 560, 1880 700" stroke-width="1.5"/>
+                <path class="root-branch" d="M1740 700 Q1640 780, 1580 920" stroke-width="1.5"/>
+                <path class="root-tendril" d="M1860 300 Q1900 400, 1920 520" stroke-width="1"/>
+                <path class="root-tendril" d="M1560 450 Q1500 540, 1480 660" stroke-width="1"/>
+            </g>
+            <!-- Root system 3 - center subtle -->
+            <g class="root-group root-3" fill="none" stroke="url(#rootGradient)" stroke-linecap="round" opacity="0.5">
+                <path class="root-main" d="M960 -80 Q920 120, 980 320 Q1040 520, 960 720 Q880 920, 940 1120" stroke-width="2"/>
+                <path class="root-branch" d="M960 150 Q860 240, 800 380" stroke-width="1.5"/>
+                <path class="root-branch" d="M980 350 Q1080 440, 1140 580" stroke-width="1.5"/>
+                <path class="root-tendril" d="M800 380 Q740 480, 720 600" stroke-width="1"/>
+                <path class="root-tendril" d="M1140 580 Q1200 680, 1220 800" stroke-width="1"/>
+            </g>
+        </svg>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="main-nav">
+        <div class="nav-inner">
+            <a href="#" class="logo">
+                <img src="../assets/images/emb-logo.png" alt="Ember & Roots Wellness" class="logo-image">
+            </a>
+            <div class="nav-links">
+                <a href="#offerings">Offerings</a>
+                <a href="#about">About</a>
+                <a href="#gallery">Gallery</a>
+                <a href="#reviews">Reviews</a>
+                <a href="tel:7245164841" class="nav-phone">
+                    (724) 516-4841
+                </a>
+            </div>
+            <button class="mobile-menu-btn" aria-label="Menu">
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="hero">
+        <div class="hero-bg-shapes">
+            <div class="shape shape-1"></div>
+            <div class="shape shape-2"></div>
+            <div class="shape shape-3"></div>
+        </div>
+        <div class="hero-content">
+            <p class="hero-tagline">A Self-Care Haven</p>
+            <h1 class="hero-title">
+                <span class="title-line">Step into</span>
+                <span class="title-line title-accent">ritual</span>
+                <span class="title-line">return to</span>
+                <span class="title-line title-accent">peace</span>
+            </h1>
+            <p class="hero-subtitle">Intuitive + Holistic + Wellness</p>
+            <a href="#offerings" class="hero-cta">
+                <span>Book Your Experience</span>
+                <span class="cta-arrow">&#8594;</span>
+            </a>
+        </div>
+        <div class="hero-visual">
+            <div class="candle candle-1">
+                <div class="flame"></div>
+                <div class="candle-body"></div>
+            </div>
+            <div class="candle candle-2">
+                <div class="flame"></div>
+                <div class="candle-body"></div>
+            </div>
+            <div class="candle candle-3">
+                <div class="flame"></div>
+                <div class="candle-body"></div>
+            </div>
+            <div class="candle-reflection"></div>
+        </div>
+        <div class="scroll-indicator">
+            <span>Explore</span>
+            <div class="scroll-line"></div>
+        </div>
+    </header>
+
+    <!-- Offerings Section -->
+    <section id="offerings" class="offerings-section">
+        <div class="section-header">
+            <span class="section-label">&#10022; Our Offerings &#10022;</span>
+            <h2 class="section-title">Curated Experiences</h2>
+            <p class="section-desc">Each service is crafted with intention, honoring your unique journey to wellness</p>
+        </div>
+
+        <div class="offerings-grid">
+            <!-- Facial + Body Treatments -->
+            <div class="offering-category" data-category="facial">
+                <button class="category-header">
+                    <div class="category-icon">
+                        <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <circle cx="20" cy="15" r="10"/>
+                            <path d="M10 35c0-8 4.5-12 10-12s10 4 10 12"/>
+                        </svg>
+                    </div>
+                    <div class="category-info">
+                        <h3>Facial + Body Treatments</h3>
+                        <p>Glo2Facial, FX Treatments, Glacial Glow & more</p>
+                    </div>
+                    <span class="category-toggle">+</span>
+                </button>
+                <div class="category-services">
+                    <div class="service-item">
+                        <div class="service-info">
+                            <h4>Signature Glo2facial</h4>
+                            <p class="service-duration">1 hr</p>
+                        </div>
+                        <div class="service-price">$225</div>
+                        <button class="service-book">Book</button>
+                    </div>
+                    <div class="service-item">
+                        <div class="service-info">
+                            <h4>Deluxe Glo2facial Treatment</h4>
+                            <p class="service-duration">1 hr 30 mins</p>
+                        </div>
+                        <div class="service-price">$350</div>
+                        <button class="service-book">Book</button>
+                    </div>
+                    <div class="service-item">
+                        <div class="service-info">
+                            <h4>Glacial Glow</h4>
+                            <p class="service-duration">45 mins</p>
+                        </div>
+                        <div class="service-price">$150</div>
+                        <button class="service-book">Book</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Eyelash Services -->
+            <div class="offering-category" data-category="eyelash">
+                <button class="category-header">
+                    <div class="category-icon">
+                        <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M5 20c8-8 22-8 30 0"/>
+                            <ellipse cx="20" cy="22" rx="8" ry="5"/>
+                        </svg>
+                    </div>
+                    <div class="category-info">
+                        <h3>Eyelash Services</h3>
+                        <p>Classic, Hybrid, Volume & Mega Volume Sets</p>
+                    </div>
+                    <span class="category-toggle">+</span>
+                </button>
+                <div class="category-services">
+                    <div class="service-item">
+                        <div class="service-info">
+                            <h4>Classic Full Set</h4>
+                            <p class="service-duration">1 hr 30 mins</p>
+                        </div>
+                        <div class="service-price">$150</div>
+                        <button class="service-book">Book</button>
+                    </div>
+                    <div class="service-item">
+                        <div class="service-info">
+                            <h4>Lash Lift & Tint</h4>
+                            <p class="service-duration">1 hr</p>
+                        </div>
+                        <div class="service-price">$85</div>
+                        <button class="service-book">Book</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Brow Services -->
+            <div class="offering-category" data-category="brow">
+                <button class="category-header">
+                    <div class="category-icon">
+                        <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M8 16c4-4 9-4 12-2" stroke-width="2"/>
+                            <path d="M32 16c-4-4-9-4-12-2" stroke-width="2"/>
+                        </svg>
+                    </div>
+                    <div class="category-info">
+                        <h3>Brow Services</h3>
+                        <p>Lamination, Tinting, Waxing & Shaping</p>
+                    </div>
+                    <span class="category-toggle">+</span>
+                </button>
+                <div class="category-services">
+                    <div class="service-item">
+                        <div class="service-info">
+                            <h4>Brow Lamination + Tint</h4>
+                            <p class="service-duration">1 hr</p>
+                        </div>
+                        <div class="service-price">$95</div>
+                        <button class="service-book">Book</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sound Therapy -->
+            <div class="offering-category" data-category="sound">
+                <button class="category-header">
+                    <div class="category-icon">
+                        <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <ellipse cx="20" cy="30" rx="15" ry="5"/>
+                            <path d="M10 30v-15c0-8 20-8 20 0v15"/>
+                        </svg>
+                    </div>
+                    <div class="category-info">
+                        <h3>Sound Therapy</h3>
+                        <p>Vibrational healing & crystal bowl sessions</p>
+                    </div>
+                    <span class="category-toggle">+</span>
+                </button>
+                <div class="category-services">
+                    <div class="service-item">
+                        <div class="service-info">
+                            <h4>Sound Bath Session</h4>
+                            <p class="service-duration">1 hr</p>
+                        </div>
+                        <div class="service-price">$85</div>
+                        <button class="service-book">Book</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Reiki -->
+            <div class="offering-category" data-category="reiki">
+                <button class="category-header">
+                    <div class="category-icon">
+                        <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M20 5v30"/>
+                            <circle cx="20" cy="20" r="5"/>
+                        </svg>
+                    </div>
+                    <div class="category-info">
+                        <h3>Reiki</h3>
+                        <p>Energy healing & chakra balancing</p>
+                    </div>
+                    <span class="category-toggle">+</span>
+                </button>
+                <div class="category-services">
+                    <div class="service-item">
+                        <div class="service-info">
+                            <h4>Reiki Session</h4>
+                            <p class="service-duration">1 hr</p>
+                        </div>
+                        <div class="service-price">$95</div>
+                        <button class="service-book">Book</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Massage Therapy -->
+            <div class="offering-category" data-category="massage">
+                <button class="category-header">
+                    <div class="category-icon">
+                        <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M15 10c-3 5-3 15 0 20"/>
+                            <path d="M25 10c3 5 3 15 0 20"/>
+                            <ellipse cx="20" cy="20" rx="3" ry="8"/>
+                        </svg>
+                    </div>
+                    <div class="category-info">
+                        <h3>Massage Therapy</h3>
+                        <p>Relaxation, deep tissue & therapeutic bodywork</p>
+                    </div>
+                    <span class="category-toggle">+</span>
+                </button>
+                <div class="category-services">
+                    <div class="service-item">
+                        <div class="service-info">
+                            <h4>Relaxation Massage</h4>
+                            <p class="service-duration">1 hr</p>
+                        </div>
+                        <div class="service-price">$95</div>
+                        <button class="service-book">Book</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Waxing -->
+            <div class="offering-category" data-category="waxing">
+                <button class="category-header">
+                    <div class="category-icon">
+                        <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M15 35l5-25 5 25"/>
+                            <path d="M12 35h16"/>
+                        </svg>
+                    </div>
+                    <div class="category-info">
+                        <h3>Waxing Services</h3>
+                        <p>Full body waxing with gentle techniques</p>
+                    </div>
+                    <span class="category-toggle">+</span>
+                </button>
+                <div class="category-services">
+                    <div class="service-item">
+                        <div class="service-info">
+                            <h4>Brazilian Wax</h4>
+                            <p class="service-duration">45 mins</p>
+                        </div>
+                        <div class="service-price">$65</div>
+                        <button class="service-book">Book</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Makeup -->
+            <div class="offering-category" data-category="makeup">
+                <button class="category-header">
+                    <div class="category-icon">
+                        <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M10 30l8-20h4l8 20"/>
+                            <circle cx="20" cy="12" r="3"/>
+                        </svg>
+                    </div>
+                    <div class="category-info">
+                        <h3>Makeup</h3>
+                        <p>Bridal, special occasion & everyday glam</p>
+                    </div>
+                    <span class="category-toggle">+</span>
+                </button>
+                <div class="category-services">
+                    <div class="service-item">
+                        <div class="service-info">
+                            <h4>Bridal Makeup</h4>
+                            <p class="service-duration">1 hr 30 mins</p>
+                        </div>
+                        <div class="service-price">$150</div>
+                        <button class="service-book">Book</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="about-section">
+        <div class="about-visual">
+            <div class="about-orb"></div>
+            <div class="about-rings">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+        <div class="about-content">
+            <span class="section-label">&#10022; Our Story &#10022;</span>
+            <h2 class="section-title">Rooted in Intention</h2>
+            <p class="about-text">
+                Ember & Roots Wellness was born from a deep calling to create sacred space for healing and transformation.
+                We believe that true wellness encompasses mind, body, and spirit—each treatment is a ritual,
+                each visit an opportunity to reconnect with your innermost self.
+            </p>
+            <p class="about-text">
+                Our holistic approach combines cutting-edge aesthetics with ancient healing practices,
+                honoring both the science of beauty and the art of intuitive care. Here, you are seen,
+                heard, and held in your journey back to wholeness.
+            </p>
+            <div class="about-values">
+                <div class="value">
+                    <span class="value-icon">&#10022;</span>
+                    <span>Intuitive Care</span>
+                </div>
+                <div class="value">
+                    <span class="value-icon">&#10022;</span>
+                    <span>Holistic Healing</span>
+                </div>
+                <div class="value">
+                    <span class="value-icon">&#10022;</span>
+                    <span>Sacred Space</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Gallery Section -->
+    <section id="gallery" class="gallery-section">
+        <div class="section-header">
+            <span class="section-label">&#10022; Gallery &#10022;</span>
+            <h2 class="section-title">Moments of Transformation</h2>
+        </div>
+        <div class="gallery-grid">
+            <div class="gallery-item gi-1">
+                <div class="gallery-placeholder">
+                    <span>Treatment Room</span>
+                </div>
+            </div>
+            <div class="gallery-item gi-2">
+                <div class="gallery-placeholder">
+                    <span>Facial Treatment</span>
+                </div>
+            </div>
+            <div class="gallery-item gi-3">
+                <div class="gallery-placeholder">
+                    <span>Products</span>
+                </div>
+            </div>
+            <div class="gallery-item gi-4">
+                <div class="gallery-placeholder">
+                    <span>Relaxation Space</span>
+                </div>
+            </div>
+            <div class="gallery-item gi-5">
+                <div class="gallery-placeholder">
+                    <span>Results</span>
+                </div>
+            </div>
+            <div class="gallery-item gi-6">
+                <div class="gallery-placeholder">
+                    <span>Sound Healing</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Reviews Section -->
+    <section id="reviews" class="reviews-section">
+        <div class="section-header">
+            <span class="section-label">&#10022; Kind Words &#10022;</span>
+            <h2 class="section-title">What Our Guests Say</h2>
+            <div class="reviews-rating">
+                <div class="stars">
+                    <span>&#9733;</span><span>&#9733;</span><span>&#9733;</span><span>&#9733;</span><span>&#9733;</span>
+                </div>
+                <span class="rating-text">5.0 from 77 reviews</span>
+            </div>
+        </div>
+        <div class="reviews-carousel">
+            <div class="review-card">
+                <div class="review-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+                <p class="review-text">"I've been going to Emily for an array of services for years now. From facials to scalp detoxes, lashes and brows - she never lets me down!! Always creates such a welcoming environment."</p>
+                <div class="review-author">
+                    <span class="author-name">Karli J.</span>
+                    <span class="review-date">Last month</span>
+                </div>
+            </div>
+            <div class="review-card">
+                <div class="review-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+                <p class="review-text">"The most relaxing experience I've ever had. Emily's energy is so calming and her attention to detail is unmatched. My skin has never looked better!"</p>
+                <div class="review-author">
+                    <span class="author-name">Sarah M.</span>
+                    <span class="review-date">2 months ago</span>
+                </div>
+            </div>
+            <div class="review-card">
+                <div class="review-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+                <p class="review-text">"A true sanctuary. The sound therapy session was transformative. I left feeling lighter and more centered than I have in years. Highly recommend!"</p>
+                <div class="review-author">
+                    <span class="author-name">Michelle R.</span>
+                    <span class="review-date">3 months ago</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact-section">
+        <div class="contact-content">
+            <div class="contact-info">
+                <span class="section-label">&#10022; Visit Us &#10022;</span>
+                <h2 class="section-title">Begin Your Journey</h2>
+                <div class="contact-details">
+                    <div class="contact-item">
+                        <span class="contact-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/>
+                                <circle cx="12" cy="10" r="3"/>
+                            </svg>
+                        </span>
+                        <div>
+                            <strong>3122 Carson Avenue</strong>
+                            <span>Murrysville, PA 15668</span>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <span class="contact-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/>
+                            </svg>
+                        </span>
+                        <div>
+                            <strong>(724) 516-4841</strong>
+                            <span>Call or text</span>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <span class="contact-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <circle cx="12" cy="12" r="10"/>
+                                <polyline points="12 6 12 12 16 14"/>
+                            </svg>
+                        </span>
+                        <div>
+                            <strong>Hours</strong>
+                            <span>By appointment only</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="social-links">
+                    <a href="https://www.instagram.com/emberandroots/" target="_blank" aria-label="Instagram">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <rect x="2" y="2" width="20" height="20" rx="5"/>
+                            <circle cx="12" cy="12" r="4"/>
+                        </svg>
+                    </a>
+                    <a href="https://www.facebook.com/emberandroots/" target="_blank" aria-label="Facebook">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+            <div class="contact-map">
+                <div class="map-placeholder">
+                    <span>Map</span>
+                    <a href="https://maps.google.com/?q=3122+Carson+Avenue+Murrysville+PA+15668" target="_blank" class="map-link">
+                        Get Directions &#8594;
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Booking Modal -->
+    <div class="booking-modal" id="bookingModal">
+        <div class="modal-overlay"></div>
+        <div class="modal-content">
+            <button class="modal-close" aria-label="Close">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M18 6L6 18M6 6l12 12"/>
+                </svg>
+            </button>
+
+            <div class="booking-steps">
+                <div class="booking-step step-1 active" data-step="1">
+                    <div class="step-header">
+                        <span class="step-number">01</span>
+                        <h3>Your Selection</h3>
+                    </div>
+                    <div class="selected-service">
+                        <h4 class="service-name">Signature Glo2facial</h4>
+                        <div class="service-details">
+                            <span class="detail"><span class="icon">&#9711;</span> 1 hr</span>
+                            <span class="detail"><span class="icon">&#10022;</span> $225</span>
+                        </div>
+                    </div>
+                    <button class="step-next">Continue to Date Selection</button>
+                </div>
+
+                <div class="booking-step step-2" data-step="2">
+                    <div class="step-header">
+                        <span class="step-number">02</span>
+                        <h3>Choose a Date</h3>
+                    </div>
+                    <div class="calendar">
+                        <div class="calendar-header">
+                            <button class="cal-nav prev">&#8592;</button>
+                            <span class="cal-month">February 2026</span>
+                            <button class="cal-nav next">&#8594;</button>
+                        </div>
+                        <div class="calendar-weekdays">
+                            <span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span>
+                        </div>
+                        <div class="calendar-days"></div>
+                    </div>
+                    <button class="step-next" disabled>Select a Date</button>
+                </div>
+
+                <div class="booking-step step-3" data-step="3">
+                    <div class="step-header">
+                        <span class="step-number">03</span>
+                        <h3>Choose a Time</h3>
+                    </div>
+                    <div class="time-slots">
+                        <button class="time-slot">9:00 AM</button>
+                        <button class="time-slot">10:00 AM</button>
+                        <button class="time-slot">11:00 AM</button>
+                        <button class="time-slot unavailable">12:00 PM</button>
+                        <button class="time-slot">1:00 PM</button>
+                        <button class="time-slot">2:00 PM</button>
+                        <button class="time-slot unavailable">3:00 PM</button>
+                        <button class="time-slot">4:00 PM</button>
+                    </div>
+                    <button class="step-next" disabled>Select a Time</button>
+                </div>
+
+                <div class="booking-step step-4" data-step="4">
+                    <div class="step-header">
+                        <span class="step-number">04</span>
+                        <h3>Your Information</h3>
+                    </div>
+                    <form class="booking-form">
+                        <div class="form-group">
+                            <label for="bookingName">Full Name</label>
+                            <input type="text" id="bookingName" name="name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="bookingEmail">Email</label>
+                            <input type="email" id="bookingEmail" name="email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="bookingPhone">Phone</label>
+                            <input type="tel" id="bookingPhone" name="phone" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="bookingNotes">Notes (optional)</label>
+                            <textarea id="bookingNotes" name="notes" rows="3"></textarea>
+                        </div>
+                        <button type="submit" class="step-next submit-booking">Complete Booking</button>
+                    </form>
+                </div>
+
+                <div class="booking-step step-5" data-step="5">
+                    <div class="confirmation-content">
+                        <div class="confirmation-icon">&#10003;</div>
+                        <h3>Booking Confirmed</h3>
+                        <p>Thank you for choosing Ember & Roots Wellness. A confirmation email has been sent to you.</p>
+                        <div class="booking-summary">
+                            <div class="summary-item">
+                                <span class="label">Service</span>
+                                <span class="value">Signature Glo2facial</span>
+                            </div>
+                            <div class="summary-item">
+                                <span class="label">Date</span>
+                                <span class="value date-value">February 15, 2026</span>
+                            </div>
+                            <div class="summary-item">
+                                <span class="label">Time</span>
+                                <span class="value time-value">10:00 AM</span>
+                            </div>
+                        </div>
+                        <p class="policy-note">A 48-hour cancellation policy applies.</p>
+                        <button class="close-modal-btn">Done</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="booking-progress">
+                <span class="progress-dot active"></span>
+                <span class="progress-dot"></span>
+                <span class="progress-dot"></span>
+                <span class="progress-dot"></span>
+                <span class="progress-dot"></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="main-footer">
+        <div class="footer-content">
+            <div class="footer-logo">
+                <img src="../assets/images/emb-logo.png" alt="Ember & Roots Wellness" class="footer-logo-image">
+            </div>
+            <p class="footer-tagline">Step into ritual. Return to peace.</p>
+            <div class="footer-links">
+                <a href="#offerings">Offerings</a>
+                <a href="#about">About</a>
+                <a href="#gallery">Gallery</a>
+                <a href="#reviews">Reviews</a>
+            </div>
+            <p class="footer-copyright">&copy; 2026 Ember & Roots Wellness. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

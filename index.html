@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book an Appointment | Ember & Roots Wellness</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Questrial&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="booking-page.css">
+</head>
+<body>
+    <!-- Ambient background -->
+    <div class="ambient-glow"></div>
+    <div class="grain-overlay"></div>
+
+    <!-- Simple Header -->
+    <header class="booking-header">
+        <a href="#" class="logo">
+            <div class="logo-text">
+                <span class="logo-ember">Ember &</span>
+                <span class="logo-roots">Roots</span>
+                <span class="logo-wellness">W E L L N E S S</span>
+            </div>
+        </a>
+        <a href="tel:7245164841" class="header-phone">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/>
+            </svg>
+            (724) 516-4841
+        </a>
+    </header>
+
+    <!-- Main Booking Section -->
+    <main class="booking-page">
+        <!-- Hero/Title -->
+        <section class="booking-hero">
+            <h1>Book Your Experience</h1>
+            <p>Select a team member to begin your wellness journey</p>
+        </section>
+
+        <!-- Team Member Selection -->
+        <section class="team-section" id="teamSection">
+            <div class="team-grid" id="teamGrid">
+                <!-- Team members loaded by JS -->
+                <div class="loading-spinner"></div>
+            </div>
+        </section>
+
+        <!-- Booking Flow Container (appears after team member selected) -->
+        <section class="booking-flow-section" id="bookingFlowSection" style="display: none;">
+            <div class="booking-flow-container">
+                <!-- Selected Team Member Summary -->
+                <div class="selected-member-bar" id="selectedMemberBar">
+                    <div class="selected-member-info">
+                        <span class="selected-label">Booking with</span>
+                        <span class="selected-name" id="selectedMemberName">Emily</span>
+                    </div>
+                    <button class="change-member-btn" id="changeMemberBtn">Change</button>
+                </div>
+
+                <!-- Booking Steps -->
+                <div class="booking-steps-container" id="bookingSteps">
+                    <!-- Step 1: Select Service -->
+                    <div class="booking-step step-1 active" data-step="1">
+                        <div class="step-header">
+                            <span class="step-number">01</span>
+                            <h3>Select a Service</h3>
+                        </div>
+                        <div class="service-selection" id="serviceSelection">
+                            <!-- Services populated by JS -->
+                        </div>
+                        <button class="step-next" id="btnStep1" disabled>Select a Service</button>
+                    </div>
+
+                    <!-- Step 2: Select Date -->
+                    <div class="booking-step step-2" data-step="2">
+                        <button class="step-back" id="backToStep1">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M19 12H5M12 19l-7-7 7-7"/>
+                            </svg>
+                            Back
+                        </button>
+                        <div class="step-header">
+                            <span class="step-number">02</span>
+                            <h3>Choose a Date</h3>
+                        </div>
+                        <div class="calendar">
+                            <div class="calendar-header">
+                                <button class="cal-nav prev" id="calPrev">←</button>
+                                <span class="cal-month" id="calMonth">February 2026</span>
+                                <button class="cal-nav next" id="calNext">→</button>
+                            </div>
+                            <div class="calendar-weekdays">
+                                <span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span>
+                            </div>
+                            <div class="calendar-days" id="calendarDays"></div>
+                        </div>
+                        <button class="step-next" id="btnStep2" disabled>Select a Date</button>
+                    </div>
+
+                    <!-- Step 3: Select Time -->
+                    <div class="booking-step step-3" data-step="3">
+                        <button class="step-back" id="backToStep2">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M19 12H5M12 19l-7-7 7-7"/>
+                            </svg>
+                            Back
+                        </button>
+                        <div class="step-header">
+                            <span class="step-number">03</span>
+                            <h3>Choose a Time</h3>
+                        </div>
+                        <div class="time-slots" id="timeSlots"></div>
+                        <button class="step-next" id="btnStep3" disabled>Select a Time</button>
+                    </div>
+
+                    <!-- Step 4: New or Returning (Email/Phone) -->
+                    <div class="booking-step step-4" data-step="4">
+                        <button class="step-back" id="backToStep3">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M19 12H5M12 19l-7-7 7-7"/>
+                            </svg>
+                            Back
+                        </button>
+                        <div class="step-header">
+                            <span class="step-number">04</span>
+                            <h3>Almost There!</h3>
+                        </div>
+                        <div class="auth-step-content">
+                            <div class="auth-choice">
+                                <p>How would you like to verify?</p>
+                                <div class="auth-tabs">
+                                    <button class="auth-tab active" data-auth="email">Email</button>
+                                    <button class="auth-tab" data-auth="phone">Phone</button>
+                                </div>
+                            </div>
+                            <div class="auth-input-group" id="authEmailGroup">
+                                <input type="email" id="authEmail" placeholder="your@email.com" autocomplete="email">
+                            </div>
+                            <div class="auth-input-group" id="authPhoneGroup" style="display: none;">
+                                <input type="tel" id="authPhone" placeholder="(555) 123-4567" autocomplete="tel">
+                            </div>
+                            <div id="authError" class="error-message" style="display: none;"></div>
+                            <button class="step-next" id="btnSendOTP">Send Verification Code</button>
+                        </div>
+                    </div>
+
+                    <!-- Step 5: Enter OTP -->
+                    <div class="booking-step step-5" data-step="5">
+                        <button class="step-back" id="backToStep4">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M19 12H5M12 19l-7-7 7-7"/>
+                            </svg>
+                            Back
+                        </button>
+                        <div class="step-header">
+                            <span class="step-number">05</span>
+                            <h3>Enter Code</h3>
+                        </div>
+                        <div class="auth-step-content">
+                            <p class="otp-message" id="otpMessage">Enter the 6-digit code sent to your email</p>
+                            <div class="otp-input-group" id="otpInputs">
+                                <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]" autocomplete="one-time-code">
+                                <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]">
+                                <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]">
+                                <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]">
+                                <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]">
+                                <input type="text" maxlength="1" inputmode="numeric" pattern="[0-9]">
+                            </div>
+                            <div id="otpError" class="error-message" style="display: none;"></div>
+                            <button class="otp-resend" id="resendOTP" disabled>Resend code in <span id="resendTimer">60</span>s</button>
+                            <button class="step-next" id="btnVerifyOTP" disabled>Verify Code</button>
+                        </div>
+                    </div>
+
+                    <!-- Step 6: New Customer Profile -->
+                    <div class="booking-step step-6" data-step="6">
+                        <div class="step-header">
+                            <span class="step-number">06</span>
+                            <h3>Create Your Profile</h3>
+                        </div>
+                        <div class="profile-header">
+                            <p>Welcome! Let's set up your profile.</p>
+                        </div>
+                        <form class="profile-form" id="newCustomerForm">
+                            <div class="avatar-upload">
+                                <label class="avatar-upload-btn" id="avatarUploadBtn">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                        <path d="M12 5v14M5 12h14"/>
+                                    </svg>
+                                    <span>Photo</span>
+                                    <input type="file" id="avatarInput" accept="image/*" style="display: none;">
+                                </label>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="profileFirstName">First Name *</label>
+                                    <input type="text" id="profileFirstName" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="profileLastName">Last Name</label>
+                                    <input type="text" id="profileLastName">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="profileAddress">Street Address</label>
+                                <input type="text" id="profileAddress" placeholder="123 Main St">
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="profileCity">City</label>
+                                    <input type="text" id="profileCity">
+                                </div>
+                                <div class="form-group">
+                                    <label for="profileState">State</label>
+                                    <input type="text" id="profileState" maxlength="2" placeholder="PA">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="profileZip">ZIP</label>
+                                <input type="text" id="profileZip" maxlength="10">
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="profileCell">Cell Phone</label>
+                                    <input type="tel" id="profileCell" placeholder="(555) 123-4567">
+                                </div>
+                                <div class="form-group">
+                                    <label for="profileEmail">Email</label>
+                                    <input type="email" id="profileEmail">
+                                </div>
+                            </div>
+                            <span class="form-section-label">Social Media (optional)</span>
+                            <div class="social-input">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                    <rect x="2" y="2" width="20" height="20" rx="5"/>
+                                    <circle cx="12" cy="12" r="4"/>
+                                </svg>
+                                <input type="text" id="profileInstagram" placeholder="instagram username">
+                            </div>
+                            <div class="social-input">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                    <path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/>
+                                </svg>
+                                <input type="text" id="profileFacebook" placeholder="facebook profile">
+                            </div>
+                            <div class="social-input">
+                                <svg viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-5.2 1.74 2.89 2.89 0 012.31-4.64 2.93 2.93 0 01.88.13V9.4a6.84 6.84 0 00-1-.05A6.33 6.33 0 005 20.1a6.34 6.34 0 0010.86-4.43v-7a8.16 8.16 0 004.77 1.52v-3.4a4.85 4.85 0 01-1-.1z"/>
+                                </svg>
+                                <input type="text" id="profileTiktok" placeholder="tiktok username">
+                            </div>
+                            <div id="profileError" class="error-message" style="display: none;"></div>
+                            <button type="submit" class="step-next" id="btnSaveProfile">Save & Continue</button>
+                        </form>
+                    </div>
+
+                    <!-- Step 7: Confirmation -->
+                    <div class="booking-step step-7" data-step="7">
+                        <div class="final-confirmation">
+                            <div class="returning-customer-card" id="customerCard">
+                                <p class="welcome-back">Welcome back!</p>
+                                <div class="customer-avatar" id="confirmAvatar">
+                                    <span id="confirmInitials"></span>
+                                </div>
+                                <h4 class="customer-name" id="confirmName"></h4>
+                                <p class="customer-info" id="confirmEmail"></p>
+                            </div>
+
+                            <div class="booking-details-card">
+                                <div class="detail-row">
+                                    <span class="detail-label">Service</span>
+                                    <span class="detail-value" id="confirmService"></span>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-label">With</span>
+                                    <span class="detail-value" id="confirmStylist"></span>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-label">Date</span>
+                                    <span class="detail-value" id="confirmDate"></span>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-label">Time</span>
+                                    <span class="detail-value" id="confirmTime"></span>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-label">Price</span>
+                                    <span class="detail-value" id="confirmPrice"></span>
+                                </div>
+                            </div>
+
+                            <button class="book-it-button" id="btnBookIt">BOOK IT!</button>
+                            <p class="booking-note">A 48-hour cancellation policy applies.</p>
+                        </div>
+                    </div>
+
+                    <!-- Step 8: Success -->
+                    <div class="booking-step step-8" data-step="8">
+                        <div class="confirmation-content">
+                            <div class="confirmation-icon">✓</div>
+                            <h3>You're All Set!</h3>
+                            <p>Your appointment has been booked. A confirmation has been sent to your email.</p>
+                            <div class="booking-summary" id="finalSummary">
+                                <div class="summary-item">
+                                    <span class="label">Confirmation</span>
+                                    <span class="value" id="finalCode" style="color: var(--ember-gold); font-weight: bold;"></span>
+                                </div>
+                                <div class="summary-item">
+                                    <span class="label">Service</span>
+                                    <span class="value" id="finalService"></span>
+                                </div>
+                                <div class="summary-item">
+                                    <span class="label">Date</span>
+                                    <span class="value" id="finalDate"></span>
+                                </div>
+                                <div class="summary-item">
+                                    <span class="label">Time</span>
+                                    <span class="value" id="finalTime"></span>
+                                </div>
+                            </div>
+                            <p class="policy-note">We look forward to seeing you!</p>
+                            <button class="book-another-btn" id="btnBookAnother">Book Another Appointment</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Progress Bar -->
+                <div class="booking-progress" id="bookingProgress">
+                    <span class="progress-dot active"></span>
+                    <span class="progress-dot"></span>
+                    <span class="progress-dot"></span>
+                    <span class="progress-dot"></span>
+                    <span class="progress-dot"></span>
+                    <span class="progress-dot"></span>
+                    <span class="progress-dot"></span>
+                    <span class="progress-dot"></span>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="main-footer">
+        <div class="footer-content">
+            <div class="footer-logo">
+                <span class="logo-ember">Ember &</span>
+                <span class="logo-roots">Roots</span>
+                <span class="logo-wellness">W E L L N E S S</span>
+            </div>
+            <p class="footer-tagline">Step into ritual. Return to peace.</p>
+            <p class="footer-copyright">© 2026 Ember & Roots Wellness. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="booking-page.js"></script>
+</body>
+</html>

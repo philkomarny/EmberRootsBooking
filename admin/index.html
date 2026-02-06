@@ -1,0 +1,1745 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | Ember & Roots Wellness</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="admin.css?v=5">
+</head>
+<body>
+    <div id="app">
+        <!-- Login Screen -->
+        <div id="loginScreen" class="login-screen">
+            <div class="login-card">
+                <div class="login-logo">
+                    <span class="logo-ember">Ember &</span>
+                    <span class="logo-roots">Roots</span>
+                    <span class="logo-wellness">A D M I N</span>
+                </div>
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" required autocomplete="email">
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" name="password" required autocomplete="current-password">
+                    </div>
+                    <button type="submit" class="btn-primary">Sign In</button>
+                    <p id="loginError" class="error-message"></p>
+                </form>
+            </div>
+        </div>
+
+        <!-- Dashboard -->
+        <div id="dashboard" class="dashboard hidden">
+            <!-- Sidebar -->
+            <aside class="sidebar">
+                <div class="sidebar-logo">
+                    <span class="logo-ember">Ember &</span>
+                    <span class="logo-roots">Roots</span>
+                </div>
+                <nav class="sidebar-nav">
+                    <a href="#" class="nav-item active" data-section="overview">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <rect x="3" y="3" width="7" height="7" rx="1"/>
+                            <rect x="14" y="3" width="7" height="7" rx="1"/>
+                            <rect x="3" y="14" width="7" height="7" rx="1"/>
+                            <rect x="14" y="14" width="7" height="7" rx="1"/>
+                        </svg>
+                        <span>Dashboard</span>
+                    </a>
+                    <a href="#" class="nav-item" data-section="bookings">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/>
+                            <rect x="9" y="3" width="6" height="4" rx="1"/>
+                            <path d="M9 12h6M9 16h6"/>
+                        </svg>
+                        <span>Bookings</span>
+                    </a>
+                    <a href="#" class="nav-item" data-section="clients">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/>
+                            <circle cx="12" cy="7" r="4"/>
+                        </svg>
+                        <span>Clients</span>
+                    </a>
+                    <a href="#" class="nav-item owner-only" data-section="stylists">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/>
+                            <circle cx="9" cy="7" r="4"/>
+                            <path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/>
+                        </svg>
+                        <span>Team</span>
+                    </a>
+                    <a href="#" class="nav-item owner-only" data-section="settings">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <circle cx="12" cy="12" r="3"/>
+                            <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 01-1.42 3.42 2 2 0 01-1.42-.58l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-3.42-1.42 2 2 0 01.58-1.42l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 011.42-3.42 2 2 0 011.42.58l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 013.42 1.42 2 2 0 01-.58 1.42l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/>
+                        </svg>
+                        <span>Settings</span>
+                    </a>
+                </nav>
+                <div class="sidebar-user">
+                    <div class="user-info">
+                        <span class="user-name" id="userName">Emily</span>
+                        <span class="user-role" id="userRole">Owner</span>
+                    </div>
+                    <button id="logoutBtn" class="logout-btn" title="Sign Out">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/>
+                        </svg>
+                    </button>
+                </div>
+            </aside>
+
+            <!-- Main Content -->
+            <main class="main-content">
+                <!-- Overview Section -->
+                <section id="overviewSection" class="section active">
+                    <header class="section-header">
+                        <h1>Dashboard</h1>
+                        <p class="date-display" id="currentDate"></p>
+                    </header>
+
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                    <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                                </svg>
+                            </div>
+                            <div class="stat-content">
+                                <span class="stat-value" id="todayBookings">0</span>
+                                <span class="stat-label">Today's Bookings</span>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                    <line x1="12" y1="1" x2="12" y2="23"/>
+                                    <path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/>
+                                </svg>
+                            </div>
+                            <div class="stat-content">
+                                <span class="stat-value" id="todayRevenue">$0</span>
+                                <span class="stat-label">Today's Revenue</span>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                    <rect x="3" y="4" width="18" height="18" rx="2"/>
+                                    <path d="M16 2v4M8 2v4M3 10h18"/>
+                                </svg>
+                            </div>
+                            <div class="stat-content">
+                                <span class="stat-value" id="weekBookings">0</span>
+                                <span class="stat-label">This Week</span>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                    <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/>
+                                    <polyline points="17 6 23 6 23 12"/>
+                                </svg>
+                            </div>
+                            <div class="stat-content">
+                                <span class="stat-value" id="weekRevenue">$0</span>
+                                <span class="stat-label">Week Revenue</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-grid">
+                        <div class="card upcoming-card">
+                            <h3>Upcoming Appointments</h3>
+                            <div id="upcomingList" class="appointment-list">
+                                <!-- Populated by JS -->
+                            </div>
+                        </div>
+                        <div class="card recent-card">
+                            <h3>Recent Bookings</h3>
+                            <div id="recentList" class="booking-list">
+                                <!-- Populated by JS -->
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Calendar Section -->
+                <section id="calendarSection" class="section">
+                    <header class="section-header">
+                        <h1>Calendar</h1>
+                        <div class="calendar-controls">
+                            <div class="calendar-nav">
+                                <button id="calPrev" class="icon-btn">&#8592;</button>
+                                <span id="calMonth" class="cal-month-display">February 2026</span>
+                                <button id="calNext" class="icon-btn">&#8594;</button>
+                            </div>
+                            <div class="calendar-view-toggle">
+                                <button class="view-btn active" data-view="month">Month</button>
+                                <button class="view-btn" data-view="week">Week</button>
+                                <button class="view-btn" data-view="day">Day</button>
+                            </div>
+                        </div>
+                    </header>
+
+                    <!-- Team Member Filter -->
+                    <div class="calendar-filters">
+                        <span class="filter-label">Show:</span>
+                        <div class="team-filter-chips" id="teamFilterChips">
+                            <button class="filter-chip active" data-member="all">
+                                <span class="chip-color" style="background: linear-gradient(135deg, #D4944A, #8a9678);"></span>
+                                All Team
+                            </button>
+                            <button class="filter-chip active" data-member="1">
+                                <span class="chip-color" style="background: #D4944A;"></span>
+                                Emily
+                            </button>
+                            <!-- More team members added dynamically -->
+                        </div>
+                    </div>
+
+                    <!-- Calendar Grid -->
+                    <div class="master-calendar">
+                        <div class="calendar-weekdays">
+                            <span>Sunday</span>
+                            <span>Monday</span>
+                            <span>Tuesday</span>
+                            <span>Wednesday</span>
+                            <span>Thursday</span>
+                            <span>Friday</span>
+                            <span>Saturday</span>
+                        </div>
+                        <div id="calendarGrid" class="calendar-grid">
+                            <!-- Calendar days populated by JS -->
+                        </div>
+                    </div>
+
+                    <!-- Day Detail Sidebar -->
+                    <div class="day-detail-sidebar" id="dayDetailSidebar">
+                        <div class="sidebar-header">
+                            <h3 id="selectedDateDisplay">February 1, 2026</h3>
+                            <button class="close-sidebar" id="closeDaySidebar">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M18 6L6 18M6 6l12 12"/>
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="day-appointments" id="dayAppointments">
+                            <!-- Appointments for selected day -->
+                            <div class="day-appointment" style="border-left-color: #D4944A;">
+                                <div class="appt-time-block">
+                                    <span class="appt-start">9:00 AM</span>
+                                    <span class="appt-end">10:00 AM</span>
+                                </div>
+                                <div class="appt-info">
+                                    <span class="appt-service-name">Signature Glo2Facial</span>
+                                    <span class="appt-client-name">Karli Johnson</span>
+                                    <span class="appt-stylist-name">with Emily</span>
+                                </div>
+                                <span class="appt-status-badge confirmed">Confirmed</span>
+                            </div>
+                            <div class="day-appointment" style="border-left-color: #D4944A;">
+                                <div class="appt-time-block">
+                                    <span class="appt-start">11:00 AM</span>
+                                    <span class="appt-end">11:45 AM</span>
+                                </div>
+                                <div class="appt-info">
+                                    <span class="appt-service-name">Glacial Glow</span>
+                                    <span class="appt-client-name">Sarah Mitchell</span>
+                                    <span class="appt-stylist-name">with Emily</span>
+                                </div>
+                                <span class="appt-status-badge confirmed">Confirmed</span>
+                            </div>
+                            <div class="day-appointment" style="border-left-color: #D4944A;">
+                                <div class="appt-time-block">
+                                    <span class="appt-start">2:00 PM</span>
+                                    <span class="appt-end">3:00 PM</span>
+                                </div>
+                                <div class="appt-info">
+                                    <span class="appt-service-name">Sound Bath Journey</span>
+                                    <span class="appt-client-name">Michelle Rodriguez</span>
+                                    <span class="appt-stylist-name">with Emily</span>
+                                </div>
+                                <span class="appt-status-badge confirmed">Confirmed</span>
+                            </div>
+                        </div>
+                        <button class="btn-primary add-appointment-btn" id="addAppointmentBtn">
+                            + Add Appointment
+                        </button>
+                    </div>
+                </section>
+
+                <!-- Bookings Section -->
+                <section id="bookingsSection" class="section">
+                    <header class="section-header">
+                        <h1>Bookings</h1>
+                        <div class="filter-bar">
+                            <select id="bookingStatusFilter">
+                                <option value="">All Statuses</option>
+                                <option value="confirmed">Confirmed</option>
+                                <option value="completed">Completed</option>
+                                <option value="cancelled">Cancelled</option>
+                                <option value="no_show">No Show</option>
+                            </select>
+                            <input type="date" id="bookingDateFrom" placeholder="From">
+                            <input type="date" id="bookingDateTo" placeholder="To">
+                            <button id="applyFilters" class="btn-secondary">Filter</button>
+                        </div>
+                    </header>
+                    <div id="bookingsTable" class="data-table">
+                        <!-- Bookings table populated by JS -->
+                    </div>
+                </section>
+
+                <!-- Booking Detail Modal -->
+                <div id="bookingDetailModal" class="modal">
+                    <div class="modal-overlay"></div>
+                    <div class="modal-content modal-lg">
+                        <div class="modal-header">
+                            <h3 id="bookingDetailTitle">Booking Details</h3>
+                            <button class="modal-close" onclick="closeBookingDetail()">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div id="bookingDetailContent"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Clients Section -->
+                <section id="clientsSection" class="section">
+                    <header class="section-header">
+                        <h1>Clients</h1>
+                        <div class="header-actions">
+                            <div class="search-box">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                    <circle cx="11" cy="11" r="8"/>
+                                    <path d="M21 21l-4.35-4.35"/>
+                                </svg>
+                                <input type="text" id="clientSearch" placeholder="Search clients...">
+                            </div>
+                            <button id="addClient" class="btn-primary">+ Add Client</button>
+                        </div>
+                    </header>
+
+                    <div class="clients-container">
+                        <!-- Clients List -->
+                        <div class="clients-list-panel">
+                            <div class="clients-list-header">
+                                <span class="client-count" id="clientCount">0 clients</span>
+                                <select id="clientSort">
+                                    <option value="name">Sort by Name</option>
+                                    <option value="recent">Recently Active</option>
+                                    <option value="visits">Most Visits</option>
+                                </select>
+                            </div>
+                            <div id="clientsList" class="clients-list">
+                                <!-- Client cards populated by JS -->
+                                <div class="client-card" data-client-id="1">
+                                    <div class="client-avatar">KJ</div>
+                                    <div class="client-info">
+                                        <span class="client-name">Karli Johnson</span>
+                                        <span class="client-meta">Last visit: Jan 15, 2026</span>
+                                    </div>
+                                    <span class="client-visits">12 visits</span>
+                                </div>
+                                <div class="client-card" data-client-id="2">
+                                    <div class="client-avatar">SM</div>
+                                    <div class="client-info">
+                                        <span class="client-name">Sarah Mitchell</span>
+                                        <span class="client-meta">Last visit: Jan 22, 2026</span>
+                                    </div>
+                                    <span class="client-visits">8 visits</span>
+                                </div>
+                                <div class="client-card" data-client-id="3">
+                                    <div class="client-avatar">MR</div>
+                                    <div class="client-info">
+                                        <span class="client-name">Michelle Rodriguez</span>
+                                        <span class="client-meta">Last visit: Jan 28, 2026</span>
+                                    </div>
+                                    <span class="client-visits">5 visits</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Client Detail Panel -->
+                        <div class="client-detail-panel" id="clientDetailPanel">
+                            <div class="detail-placeholder">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+                                    <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/>
+                                    <circle cx="12" cy="7" r="4"/>
+                                </svg>
+                                <p>Select a client to view their profile</p>
+                            </div>
+
+                            <!-- Client Profile (hidden by default) -->
+                            <div class="client-profile hidden" id="clientProfile">
+                                <div class="profile-header">
+                                    <div class="profile-avatar" id="profileAvatar">KJ</div>
+                                    <div class="profile-info">
+                                        <h2 id="profileName">Karli Johnson</h2>
+                                        <p class="profile-since">Client since January 2024</p>
+                                    </div>
+                                    <button class="btn-icon" id="editClientBtn" title="Edit Client">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                            <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/>
+                                            <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                                        </svg>
+                                    </button>
+                                </div>
+
+                                <div class="profile-contact">
+                                    <div class="contact-item">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                            <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.362 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.338 1.85.573 2.81.7A2 2 0 0122 16.92z"/>
+                                        </svg>
+                                        <span id="profilePhone">(724) 555-0123</span>
+                                        <button class="sms-btn" id="smsBtn" title="Send SMS">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                                <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                    <div class="contact-item">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                                            <polyline points="22,6 12,13 2,6"/>
+                                        </svg>
+                                        <span id="profileEmail">karli.j@email.com</span>
+                                    </div>
+                                </div>
+
+                                <div class="profile-stats">
+                                    <div class="stat">
+                                        <span class="stat-value" id="profileVisits">12</span>
+                                        <span class="stat-label">Total Visits</span>
+                                    </div>
+                                    <div class="stat">
+                                        <span class="stat-value" id="profileSpent">$2,450</span>
+                                        <span class="stat-label">Total Spent</span>
+                                    </div>
+                                    <div class="stat">
+                                        <span class="stat-value" id="profileNoShows">0</span>
+                                        <span class="stat-label">No Shows</span>
+                                    </div>
+                                </div>
+
+                                <!-- Tabs -->
+                                <div class="profile-tabs">
+                                    <button class="tab-btn active" data-tab="notes">Notes</button>
+                                    <button class="tab-btn" data-tab="history">Appointment History</button>
+                                    <button class="tab-btn" data-tab="preferences">Preferences</button>
+                                </div>
+
+                                <!-- Notes Tab -->
+                                <div class="tab-content active" id="notesTab">
+                                    <div class="notes-section">
+                                        <div class="notes-input">
+                                            <textarea id="newNote" placeholder="Add a note about this client..."></textarea>
+                                            <button class="btn-secondary" id="addNoteBtn">Add Note</button>
+                                        </div>
+                                        <div class="notes-list" id="notesList">
+                                            <div class="note-item">
+                                                <div class="note-header">
+                                                    <span class="note-author">Emily</span>
+                                                    <span class="note-date">Jan 15, 2026</span>
+                                                </div>
+                                                <p class="note-content">Prefers lavender scents. Sensitive skin around eyes - use gentle products only.</p>
+                                            </div>
+                                            <div class="note-item">
+                                                <div class="note-header">
+                                                    <span class="note-author">Emily</span>
+                                                    <span class="note-date">Dec 20, 2025</span>
+                                                </div>
+                                                <p class="note-content">Interested in trying sound therapy next visit. Mentioned stress from work.</p>
+                                            </div>
+                                            <div class="note-item">
+                                                <div class="note-header">
+                                                    <span class="note-author">Emily</span>
+                                                    <span class="note-date">Nov 8, 2025</span>
+                                                </div>
+                                                <p class="note-content">Birthday is March 15 - send birthday discount!</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- History Tab -->
+                                <div class="tab-content" id="historyTab">
+                                    <div class="history-list" id="historyList">
+                                        <div class="history-item">
+                                            <div class="history-date">
+                                                <span class="date-day">15</span>
+                                                <span class="date-month">Jan</span>
+                                            </div>
+                                            <div class="history-details">
+                                                <span class="history-service">Signature Glo2Facial</span>
+                                                <span class="history-stylist">with Emily</span>
+                                            </div>
+                                            <span class="history-price">$225</span>
+                                            <span class="history-status completed">Completed</span>
+                                        </div>
+                                        <div class="history-item">
+                                            <div class="history-date">
+                                                <span class="date-day">02</span>
+                                                <span class="date-month">Jan</span>
+                                            </div>
+                                            <div class="history-details">
+                                                <span class="history-service">Lash Lift & Tint</span>
+                                                <span class="history-stylist">with Emily</span>
+                                            </div>
+                                            <span class="history-price">$85</span>
+                                            <span class="history-status completed">Completed</span>
+                                        </div>
+                                        <div class="history-item">
+                                            <div class="history-date">
+                                                <span class="date-day">20</span>
+                                                <span class="date-month">Dec</span>
+                                            </div>
+                                            <div class="history-details">
+                                                <span class="history-service">Deluxe Glo2Facial</span>
+                                                <span class="history-stylist">with Emily</span>
+                                            </div>
+                                            <span class="history-price">$350</span>
+                                            <span class="history-status completed">Completed</span>
+                                        </div>
+                                        <div class="history-item">
+                                            <div class="history-date">
+                                                <span class="date-day">08</span>
+                                                <span class="date-month">Nov</span>
+                                            </div>
+                                            <div class="history-details">
+                                                <span class="history-service">Reiki Session</span>
+                                                <span class="history-stylist">with Emily</span>
+                                            </div>
+                                            <span class="history-price">$95</span>
+                                            <span class="history-status completed">Completed</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Preferences Tab -->
+                                <div class="tab-content" id="preferencesTab">
+                                    <div class="preferences-grid">
+                                        <div class="pref-group">
+                                            <label>Preferred Services</label>
+                                            <div class="pref-tags" id="prefServices">
+                                                <span class="pref-tag">Glo2Facial</span>
+                                                <span class="pref-tag">Lash Services</span>
+                                                <button class="add-pref">+</button>
+                                            </div>
+                                        </div>
+                                        <div class="pref-group">
+                                            <label>Preferred Stylist</label>
+                                            <select id="prefStylist">
+                                                <option value="">No preference</option>
+                                            </select>
+                                        </div>
+                                        <div class="pref-group">
+                                            <label>Communication Preference</label>
+                                            <div class="pref-options">
+                                                <label class="checkbox-label">
+                                                    <input type="checkbox" checked> Email reminders
+                                                </label>
+                                                <label class="checkbox-label">
+                                                    <input type="checkbox" checked> Text reminders
+                                                </label>
+                                                <label class="checkbox-label">
+                                                    <input type="checkbox"> Marketing emails
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="pref-group">
+                                            <label>Allergies / Sensitivities</label>
+                                            <textarea id="prefAllergies" placeholder="Note any allergies or skin sensitivities...">Sensitive skin around eyes</textarea>
+                                        </div>
+                                        <div class="pref-group">
+                                            <label>Special Requests</label>
+                                            <textarea id="prefRequests" placeholder="Any special requests or preferences...">Prefers lavender scents, quiet environment</textarea>
+                                        </div>
+                                    </div>
+                                    <button class="btn-primary" id="savePreferences">Save Preferences</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Add/Edit Client Modal -->
+                <div class="modal" id="clientModal">
+                    <div class="modal-overlay"></div>
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h2 id="clientModalTitle">Add New Client</h2>
+                            <button class="modal-close" id="closeClientModal">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M18 6L6 18M6 6l12 12"/>
+                                </svg>
+                            </button>
+                        </div>
+                        <form id="clientForm">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="clientFirstName">First Name *</label>
+                                    <input type="text" id="clientFirstName" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="clientLastName">Last Name *</label>
+                                    <input type="text" id="clientLastName" required>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="clientEmail">Email</label>
+                                    <input type="email" id="clientEmail">
+                                </div>
+                                <div class="form-group">
+                                    <label for="clientPhone">Phone *</label>
+                                    <input type="tel" id="clientPhone" required>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="clientBirthday">Birthday</label>
+                                <input type="date" id="clientBirthday">
+                            </div>
+                            <div class="form-group">
+                                <label for="clientNotes">Initial Notes</label>
+                                <textarea id="clientNotes" rows="3" placeholder="Any important notes about this client..."></textarea>
+                            </div>
+                            <div class="form-actions">
+                                <button type="button" class="btn-secondary" id="cancelClientBtn">Cancel</button>
+                                <button type="submit" class="btn-primary">Save Client</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Team Section (Owner only) -->
+                <section id="stylistsSection" class="section owner-only">
+                    <header class="section-header">
+                        <h1>Team Members</h1>
+                        <button id="addStylist" class="btn-primary">+ Add Team Member</button>
+                    </header>
+
+                    <div class="team-container">
+                        <!-- Team List -->
+                        <div class="team-list-panel">
+                            <div id="teamList" class="team-list">
+                                <!-- Sample Team Member -->
+                                <div class="team-card active" data-member-id="1">
+                                    <div class="team-avatar" style="background: linear-gradient(135deg, #D4944A, #E5B86A);">
+                                        <img src="../assets/images/emb-logo.png" alt="Emily" onerror="this.style.display='none'">
+                                        <span class="avatar-initials">EM</span>
+                                    </div>
+                                    <div class="team-info">
+                                        <span class="team-name">Emily</span>
+                                        <span class="team-title">Owner & Lead Esthetician</span>
+                                    </div>
+                                    <span class="team-status active">Active</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Team Member Detail Panel -->
+                        <div class="team-detail-panel" id="teamDetailPanel">
+                            <!-- Team Member Profile -->
+                            <div class="team-profile" id="teamProfile">
+                                <!-- Profile Header -->
+                                <div class="team-profile-header">
+                                    <div class="profile-photo-wrapper">
+                                        <div class="profile-photo" id="memberPhoto">
+                                            <img src="../assets/images/emb-logo.png" alt="Emily" onerror="this.style.display='none'">
+                                            <span class="photo-initials">EM</span>
+                                        </div>
+                                    </div>
+                                    <div class="profile-header-info">
+                                        <h2 id="memberName">Emily</h2>
+                                        <p class="member-title" id="memberTitle">Owner & Lead Esthetician</p>
+                                        <div class="member-social">
+                                            <a href="#" class="social-link" id="memberInstagram" title="Instagram">
+                                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                                    <rect x="2" y="2" width="20" height="20" rx="5"/>
+                                                    <circle cx="12" cy="12" r="4"/>
+                                                </svg>
+                                            </a>
+                                            <a href="#" class="social-link" id="memberFacebook" title="Facebook">
+                                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                                    <path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/>
+                                                </svg>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <button class="btn-icon" id="editMemberBtn" title="Edit Profile">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                            <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/>
+                                            <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                                        </svg>
+                                    </button>
+                                </div>
+
+                                <!-- Profile Tabs -->
+                                <div class="team-tabs">
+                                    <button class="team-tab-btn active" data-tab="bio">Bio & Info</button>
+                                    <button class="team-tab-btn" data-tab="services">Services</button>
+                                    <button class="team-tab-btn" data-tab="calendar">Calendar</button>
+                                    <button class="team-tab-btn" data-tab="availability">Availability</button>
+                                </div>
+
+                                <!-- Bio Tab -->
+                                <div class="team-tab-content active" id="bioTab">
+                                    <div class="bio-section">
+                                        <h3>About</h3>
+                                        <p id="memberBio">Emily is the owner and lead esthetician at Ember & Roots Wellness. With over 10 years of experience in holistic skincare and energy healing, she brings a unique blend of modern aesthetics and ancient healing practices to every treatment. Emily is certified in Reiki, sound therapy, and advanced facial techniques.</p>
+                                    </div>
+
+                                    <div class="bio-grid">
+                                        <div class="bio-card">
+                                            <h4>Specialties</h4>
+                                            <div class="specialty-tags" id="memberSpecialties">
+                                                <span class="specialty-tag">Glo2Facial</span>
+                                                <span class="specialty-tag">Reiki</span>
+                                                <span class="specialty-tag">Sound Therapy</span>
+                                                <span class="specialty-tag">Lash Extensions</span>
+                                            </div>
+                                        </div>
+                                        <div class="bio-card">
+                                            <h4>Certifications</h4>
+                                            <ul class="cert-list" id="memberCerts">
+                                                <li>Licensed Esthetician (PA)</li>
+                                                <li>Reiki Master Practitioner</li>
+                                                <li>Glo2Facial Certified</li>
+                                                <li>Lash Artist Certified</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+
+                                    <div class="bio-stats">
+                                        <div class="bio-stat">
+                                            <span class="stat-value" id="memberYears">10+</span>
+                                            <span class="stat-label">Years Experience</span>
+                                        </div>
+                                        <div class="bio-stat">
+                                            <span class="stat-value" id="memberClients">250+</span>
+                                            <span class="stat-label">Happy Clients</span>
+                                        </div>
+                                        <div class="bio-stat">
+                                            <span class="stat-value" id="memberRating">5.0</span>
+                                            <span class="stat-label">Avg Rating</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="bio-settings">
+                                        <label class="toggle-setting">
+                                            <input type="checkbox" id="acceptingClients" checked>
+                                            <span class="toggle-slider"></span>
+                                            <span class="toggle-label">Accepting New Clients</span>
+                                        </label>
+                                        <label class="toggle-setting">
+                                            <input type="checkbox" id="displayOnSite" checked>
+                                            <span class="toggle-slider"></span>
+                                            <span class="toggle-label">Display on Website</span>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <!-- Services Tab -->
+                                <div class="team-tab-content" id="servicesTab">
+                                    <div class="services-header">
+                                        <h3>Services Offered</h3>
+                                        <button class="btn-secondary btn-sm" id="editMemberServices">Edit Services</button>
+                                    </div>
+
+                                    <div class="member-services-list" id="memberServicesList">
+                                        <div class="service-category-group">
+                                            <h4>Facial + Body Treatments</h4>
+                                            <div class="member-service-item">
+                                                <span class="service-name">Signature Glo2Facial</span>
+                                                <span class="service-duration">60 min</span>
+                                                <span class="service-price">$225</span>
+                                            </div>
+                                            <div class="member-service-item">
+                                                <span class="service-name">Deluxe Glo2Facial</span>
+                                                <span class="service-duration">90 min</span>
+                                                <span class="service-price">$350</span>
+                                            </div>
+                                            <div class="member-service-item">
+                                                <span class="service-name">Glacial Glow</span>
+                                                <span class="service-duration">45 min</span>
+                                                <span class="service-price">$150</span>
+                                            </div>
+                                        </div>
+
+                                        <div class="service-category-group">
+                                            <h4>Energy Healing</h4>
+                                            <div class="member-service-item">
+                                                <span class="service-name">Reiki Session</span>
+                                                <span class="service-duration">60 min</span>
+                                                <span class="service-price">$95</span>
+                                            </div>
+                                            <div class="member-service-item">
+                                                <span class="service-name">Sound Bath Journey</span>
+                                                <span class="service-duration">60 min</span>
+                                                <span class="service-price">$85</span>
+                                            </div>
+                                        </div>
+
+                                        <div class="service-category-group">
+                                            <h4>Lash Services</h4>
+                                            <div class="member-service-item">
+                                                <span class="service-name">Classic Full Set</span>
+                                                <span class="service-duration">90 min</span>
+                                                <span class="service-price">$150</span>
+                                            </div>
+                                            <div class="member-service-item">
+                                                <span class="service-name">Lash Lift & Tint</span>
+                                                <span class="service-duration">60 min</span>
+                                                <span class="service-price">$85</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Calendar Tab -->
+                                <div class="team-tab-content" id="calendarTab">
+                                    <!-- View Toggle -->
+                                    <div class="member-cal-toggle">
+                                        <button class="member-cal-toggle-btn active" data-cal-view="day">Day</button>
+                                        <button class="member-cal-toggle-btn" data-cal-view="month">Month</button>
+                                    </div>
+
+                                    <!-- Day View -->
+                                    <div id="memberDayView" class="member-day-view">
+                                        <div class="day-view-header">
+                                            <button id="memberDayPrev" class="icon-btn">&#8592;</button>
+                                            <div class="day-view-title">
+                                                <span id="memberDayDate" class="day-date-display">Thursday, February 6, 2026</span>
+                                                <button id="memberDayToday" class="btn-today">Today</button>
+                                            </div>
+                                            <button id="memberDayNext" class="icon-btn">&#8594;</button>
+                                        </div>
+                                        <div id="memberDayGrid" class="day-time-grid">
+                                            <!-- Time rows populated by JS -->
+                                        </div>
+                                    </div>
+
+                                    <!-- Month Heatmap View -->
+                                    <div id="memberMonthView" class="member-month-view" style="display: none;">
+                                        <div class="month-view-header">
+                                            <button id="memberMonthPrev" class="icon-btn">&#8592;</button>
+                                            <span id="memberMonthDisplay" class="cal-month-display">February 2026</span>
+                                            <button id="memberMonthNext" class="icon-btn">&#8594;</button>
+                                        </div>
+                                        <div class="heatmap-weekdays">
+                                            <span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span>
+                                        </div>
+                                        <div id="memberHeatmapGrid" class="heatmap-grid">
+                                            <!-- Heatmap days populated by JS -->
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Availability Tab -->
+                                <div class="team-tab-content" id="availabilityTab">
+                                    <div class="availability-header">
+                                        <h3>Weekly Schedule</h3>
+                                        <button class="btn-primary btn-sm" id="saveMemberAvailability">Save Changes</button>
+                                    </div>
+
+                                    <div class="weekly-schedule" id="memberWeeklySchedule">
+                                        <div class="schedule-day">
+                                            <div class="day-header">
+                                                <label class="day-toggle">
+                                                    <input type="checkbox" data-day="0">
+                                                    <span>Sunday</span>
+                                                </label>
+                                            </div>
+                                            <div class="day-hours inactive">
+                                                <span class="closed-label">Closed</span>
+                                            </div>
+                                        </div>
+                                        <div class="schedule-day">
+                                            <div class="day-header">
+                                                <label class="day-toggle">
+                                                    <input type="checkbox" data-day="1" checked>
+                                                    <span>Monday</span>
+                                                </label>
+                                            </div>
+                                            <div class="day-hours">
+                                                <input type="time" value="09:00" class="time-input start">
+                                                <span class="time-separator">to</span>
+                                                <input type="time" value="17:00" class="time-input end">
+                                            </div>
+                                        </div>
+                                        <div class="schedule-day">
+                                            <div class="day-header">
+                                                <label class="day-toggle">
+                                                    <input type="checkbox" data-day="2" checked>
+                                                    <span>Tuesday</span>
+                                                </label>
+                                            </div>
+                                            <div class="day-hours">
+                                                <input type="time" value="09:00" class="time-input start">
+                                                <span class="time-separator">to</span>
+                                                <input type="time" value="17:00" class="time-input end">
+                                            </div>
+                                        </div>
+                                        <div class="schedule-day">
+                                            <div class="day-header">
+                                                <label class="day-toggle">
+                                                    <input type="checkbox" data-day="3" checked>
+                                                    <span>Wednesday</span>
+                                                </label>
+                                            </div>
+                                            <div class="day-hours">
+                                                <input type="time" value="09:00" class="time-input start">
+                                                <span class="time-separator">to</span>
+                                                <input type="time" value="17:00" class="time-input end">
+                                            </div>
+                                        </div>
+                                        <div class="schedule-day">
+                                            <div class="day-header">
+                                                <label class="day-toggle">
+                                                    <input type="checkbox" data-day="4" checked>
+                                                    <span>Thursday</span>
+                                                </label>
+                                            </div>
+                                            <div class="day-hours">
+                                                <input type="time" value="09:00" class="time-input start">
+                                                <span class="time-separator">to</span>
+                                                <input type="time" value="17:00" class="time-input end">
+                                            </div>
+                                        </div>
+                                        <div class="schedule-day">
+                                            <div class="day-header">
+                                                <label class="day-toggle">
+                                                    <input type="checkbox" data-day="5" checked>
+                                                    <span>Friday</span>
+                                                </label>
+                                            </div>
+                                            <div class="day-hours">
+                                                <input type="time" value="09:00" class="time-input start">
+                                                <span class="time-separator">to</span>
+                                                <input type="time" value="17:00" class="time-input end">
+                                            </div>
+                                        </div>
+                                        <div class="schedule-day">
+                                            <div class="day-header">
+                                                <label class="day-toggle">
+                                                    <input type="checkbox" data-day="6">
+                                                    <span>Saturday</span>
+                                                </label>
+                                            </div>
+                                            <div class="day-hours inactive">
+                                                <span class="closed-label">Closed</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="time-off-section">
+                                        <div class="time-off-header">
+                                            <h4>Time Off & Blocked Time</h4>
+                                            <button class="btn-secondary btn-sm" id="addMemberTimeOff">+ Add Time Off</button>
+                                        </div>
+                                        <div class="time-off-list" id="memberTimeOffList">
+                                            <div class="time-off-item">
+                                                <div class="time-off-dates">
+                                                    <span class="date-range">Feb 14 - Feb 16, 2026</span>
+                                                    <span class="time-off-reason">Valentine's Weekend</span>
+                                                </div>
+                                                <button class="delete-time-off" title="Remove">
+                                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                                        <path d="M18 6L6 18M6 6l12 12"/>
+                                                    </svg>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </section>
+
+                <!-- Layouts Section (Owner only) -->
+                <section id="layoutsSection" class="section owner-only">
+                    <header class="section-header">
+                        <h1>Layouts</h1>
+                        <p class="section-subtitle">Choose a layout style for your booking site</p>
+                    </header>
+
+                    <!-- New Layouts -->
+                    <div class="layouts-category">
+                        <h2 class="layouts-category-title">Design Layouts</h2>
+                        <p class="layouts-category-desc">Unique design approaches created with ui-ux-pro-max</p>
+                    </div>
+
+                    <div class="layouts-grid">
+                        <!-- Layout: Editorial -->
+                        <div class="layout-card" data-layout="editorial">
+                            <div class="layout-preview editorial-preview">
+                                <div class="preview-nav">
+                                    <div class="preview-logo"></div>
+                                    <div class="preview-links">
+                                        <span></span><span></span><span></span>
+                                    </div>
+                                </div>
+                                <div class="preview-hero editorial-hero">
+                                    <div class="preview-hero-content">
+                                        <div class="preview-eyebrow"></div>
+                                        <div class="preview-title-lg"></div>
+                                        <div class="preview-subtitle"></div>
+                                        <div class="preview-cta"></div>
+                                    </div>
+                                </div>
+                                <div class="preview-grid-services">
+                                    <div class="preview-card-lg"></div>
+                                    <div class="preview-card-sm"></div>
+                                    <div class="preview-card-sm"></div>
+                                </div>
+                            </div>
+                            <div class="layout-info">
+                                <h3>Editorial</h3>
+                                <p>Magazine-style layout with Playfair Display + Inter typography. Editorial services grid with featured cards. Warm terra cotta tones.</p>
+                                <div class="layout-tags">
+                                    <span class="tag">Luxury</span>
+                                    <span class="tag">Magazine</span>
+                                    <span class="tag">Terra Cotta</span>
+                                </div>
+                                <a href="../layout-editorial/" target="_blank" class="btn-secondary">Preview</a>
+                            </div>
+                        </div>
+
+                        <!-- Layout: Minimal -->
+                        <div class="layout-card" data-layout="minimal">
+                            <div class="layout-preview minimal-preview">
+                                <div class="preview-nav minimal-nav">
+                                    <div class="preview-logo"></div>
+                                    <div class="preview-phone"></div>
+                                </div>
+                                <div class="preview-centered-hero">
+                                    <div class="preview-title-centered"></div>
+                                    <div class="preview-desc-centered"></div>
+                                </div>
+                                <div class="preview-service-list">
+                                    <div class="preview-list-header"></div>
+                                    <div class="preview-list-item"></div>
+                                    <div class="preview-list-item"></div>
+                                    <div class="preview-list-item"></div>
+                                </div>
+                            </div>
+                            <div class="layout-info">
+                                <h3>Minimal</h3>
+                                <p>Clean single-column layout with Lora + Raleway typography. Elegant service lists by category. Sage green earth tones.</p>
+                                <div class="layout-tags">
+                                    <span class="tag">Clean</span>
+                                    <span class="tag">Minimal</span>
+                                    <span class="tag">Sage Green</span>
+                                </div>
+                                <a href="../layout-minimal/" target="_blank" class="btn-secondary">Preview</a>
+                            </div>
+                        </div>
+
+                        <!-- Layout: Story-Driven -->
+                        <div class="layout-card" data-layout="story-driven">
+                            <div class="layout-preview story-preview">
+                                <div class="preview-progress-bar"></div>
+                                <div class="preview-nav dark">
+                                    <div class="preview-logo"></div>
+                                    <div class="preview-links">
+                                        <span></span><span></span>
+                                    </div>
+                                </div>
+                                <div class="preview-chapter">
+                                    <div class="preview-chapter-label"></div>
+                                    <div class="preview-chapter-title"></div>
+                                </div>
+                                <div class="preview-chapter-content">
+                                    <div class="preview-pillar"></div>
+                                    <div class="preview-pillar"></div>
+                                    <div class="preview-pillar"></div>
+                                </div>
+                            </div>
+                            <div class="layout-info">
+                                <h3>Story-Driven</h3>
+                                <p>Scroll-triggered cinematic layout with Cormorant Garamond + Jost. Chapter-based narrative with progress indicator. Deep plum and gold.</p>
+                                <div class="layout-tags">
+                                    <span class="tag">Cinematic</span>
+                                    <span class="tag">Narrative</span>
+                                    <span class="tag">Plum & Gold</span>
+                                </div>
+                                <a href="../layout-story/" target="_blank" class="btn-secondary">Preview</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Color Variants -->
+                    <div class="layouts-category">
+                        <h2 class="layouts-category-title">Color Variants</h2>
+                        <p class="layouts-category-desc">Original booking site with different color themes</p>
+                    </div>
+
+                    <div class="layouts-grid">
+                        <!-- Variant: Cream & Sage (Light) -->
+                        <div class="layout-card" data-layout="variant-light">
+                            <div class="layout-preview variant-light-preview">
+                                <div class="preview-nav">
+                                    <div class="preview-logo"></div>
+                                    <div class="preview-links">
+                                        <span></span><span></span><span></span>
+                                    </div>
+                                </div>
+                                <div class="preview-hero">
+                                    <div class="preview-hero-content">
+                                        <div class="preview-badge"></div>
+                                        <div class="preview-title"></div>
+                                        <div class="preview-subtitle"></div>
+                                        <div class="preview-cta"></div>
+                                    </div>
+                                </div>
+                                <div class="preview-services">
+                                    <div class="preview-service-card"></div>
+                                    <div class="preview-service-card"></div>
+                                    <div class="preview-service-card"></div>
+                                </div>
+                            </div>
+                            <div class="layout-info">
+                                <h3>Cream & Sage</h3>
+                                <p>Light, airy feel with cream backgrounds and sage green accents. Playfair Display + Nunito Sans typography. Fresh and calming.</p>
+                                <div class="layout-tags">
+                                    <span class="tag">Light</span>
+                                    <span class="tag">Cream</span>
+                                    <span class="tag">Sage</span>
+                                </div>
+                                <a href="../variant-light/" target="_blank" class="btn-secondary">Preview</a>
+                            </div>
+                        </div>
+
+                        <!-- Variant: Warm Taupe (Medium) -->
+                        <div class="layout-card" data-layout="variant-medium">
+                            <div class="layout-preview variant-medium-preview">
+                                <div class="preview-nav">
+                                    <div class="preview-logo"></div>
+                                    <div class="preview-links">
+                                        <span></span><span></span><span></span>
+                                    </div>
+                                </div>
+                                <div class="preview-hero">
+                                    <div class="preview-hero-content">
+                                        <div class="preview-badge"></div>
+                                        <div class="preview-title"></div>
+                                        <div class="preview-subtitle"></div>
+                                        <div class="preview-cta"></div>
+                                    </div>
+                                    <div class="preview-hero-visual">
+                                        <div class="preview-candle"></div>
+                                        <div class="preview-candle"></div>
+                                        <div class="preview-candle"></div>
+                                    </div>
+                                </div>
+                                <div class="preview-services">
+                                    <div class="preview-service-card"></div>
+                                    <div class="preview-service-card"></div>
+                                    <div class="preview-service-card"></div>
+                                </div>
+                            </div>
+                            <div class="layout-info">
+                                <h3>Warm Taupe</h3>
+                                <p>Warm, grounded feel with taupe backgrounds and amber accents. Libre Baskerville + DM Sans typography. Cozy and inviting.</p>
+                                <div class="layout-tags">
+                                    <span class="tag">Warm</span>
+                                    <span class="tag">Taupe</span>
+                                    <span class="tag">Amber</span>
+                                </div>
+                                <a href="../variant-medium/" target="_blank" class="btn-secondary">Preview</a>
+                            </div>
+                        </div>
+
+                        <!-- Variant: Deep Charcoal (Dark) -->
+                        <div class="layout-card" data-layout="variant-dark">
+                            <div class="layout-preview variant-dark-preview">
+                                <div class="preview-nav dark">
+                                    <div class="preview-logo"></div>
+                                    <div class="preview-links">
+                                        <span></span><span></span><span></span>
+                                    </div>
+                                </div>
+                                <div class="preview-hero dark-hero">
+                                    <div class="preview-hero-content">
+                                        <div class="preview-badge"></div>
+                                        <div class="preview-title"></div>
+                                        <div class="preview-subtitle"></div>
+                                        <div class="preview-cta"></div>
+                                    </div>
+                                </div>
+                                <div class="preview-services dark-services">
+                                    <div class="preview-service-card"></div>
+                                    <div class="preview-service-card"></div>
+                                    <div class="preview-service-card"></div>
+                                </div>
+                            </div>
+                            <div class="layout-info">
+                                <h3>Deep Charcoal</h3>
+                                <p>Dramatic dark mode with charcoal backgrounds and gold accents. Cinzel + Jost typography. Luxurious and sophisticated.</p>
+                                <div class="layout-tags">
+                                    <span class="tag">Dark</span>
+                                    <span class="tag">Charcoal</span>
+                                    <span class="tag">Gold</span>
+                                </div>
+                                <a href="../variant-dark/" target="_blank" class="btn-secondary">Preview</a>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Settings Section (Owner only) - Landing Page -->
+                <section id="settingsSection" class="section owner-only">
+                    <header class="section-header">
+                        <h1>Settings</h1>
+                    </header>
+
+                    <div class="settings-menu">
+                        <a href="#" class="settings-menu-item" data-nav="services-management">
+                            <div class="settings-menu-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                    <path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
+                                </svg>
+                            </div>
+                            <div class="settings-menu-content">
+                                <h3>Services Management</h3>
+                                <p>Manage your master list of services and categories</p>
+                            </div>
+                            <svg class="settings-menu-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M9 18l6-6-6-6"/>
+                            </svg>
+                        </a>
+                        <a href="#" class="settings-menu-item" data-nav="business-info">
+                            <div class="settings-menu-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                    <path d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+                                </svg>
+                            </div>
+                            <div class="settings-menu-content">
+                                <h3>Business Information</h3>
+                                <p>Update your business contact details and address</p>
+                            </div>
+                            <svg class="settings-menu-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M9 18l6-6-6-6"/>
+                            </svg>
+                        </a>
+                        <a href="#" class="settings-menu-item" data-nav="booking-settings">
+                            <div class="settings-menu-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                                    <line x1="16" y1="2" x2="16" y2="6"/>
+                                    <line x1="8" y1="2" x2="8" y2="6"/>
+                                    <line x1="3" y1="10" x2="21" y2="10"/>
+                                </svg>
+                            </div>
+                            <div class="settings-menu-content">
+                                <h3>Booking Settings</h3>
+                                <p>Configure appointment scheduling rules and policies</p>
+                            </div>
+                            <svg class="settings-menu-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M9 18l6-6-6-6"/>
+                            </svg>
+                        </a>
+                    </div>
+                </section>
+
+                <!-- Services Management Section (Owner only) -->
+                <section id="servicesManagementSection" class="section owner-only">
+                    <header class="section-header">
+                        <button class="back-btn" data-nav="settings">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M15 18l-6-6 6-6"/>
+                            </svg>
+                            Settings
+                        </button>
+                        <h1>Services Management</h1>
+                    </header>
+
+                    <div class="card">
+                        <p class="card-description">Manage your master list of services. Team members can then select which services they offer.</p>
+
+                        <div class="services-management">
+                            <!-- Service Categories -->
+                            <div class="service-categories-panel">
+                                <div class="panel-header">
+                                    <h3>Categories</h3>
+                                    <button class="btn-sm btn-secondary" id="addCategoryBtn">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 14px; height: 14px;">
+                                            <path d="M12 5v14M5 12h14"/>
+                                        </svg>
+                                        Add
+                                    </button>
+                                </div>
+                                <div class="category-list" id="serviceCategoryList">
+                                    <!-- Categories loaded dynamically -->
+                                </div>
+                            </div>
+
+                            <!-- Services List -->
+                            <div class="services-list-panel">
+                                <div class="panel-header">
+                                    <h3 id="servicesPanelTitle">All Services</h3>
+                                    <button class="btn-sm btn-primary" id="addServiceBtn">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 14px; height: 14px;">
+                                            <path d="M12 5v14M5 12h14"/>
+                                        </svg>
+                                        Add Service
+                                    </button>
+                                </div>
+                                <div class="services-table-container">
+                                    <table class="services-table" id="servicesTable">
+                                        <thead>
+                                            <tr>
+                                                <th>Service Name</th>
+                                                <th>Duration</th>
+                                                <th>Base Price</th>
+                                                <th>Status</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="servicesTableBody">
+                                            <!-- Services loaded dynamically -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Business Information Section (Owner only) -->
+                <section id="businessInfoSection" class="section owner-only">
+                    <header class="section-header">
+                        <button class="back-btn" data-nav="settings">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M15 18l-6-6 6-6"/>
+                            </svg>
+                            Settings
+                        </button>
+                        <h1>Business Information</h1>
+                    </header>
+
+                    <div class="card">
+                        <p class="card-description">Update your business contact details and address.</p>
+                        <form id="businessSettings">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Business Name</label>
+                                    <input type="text" name="business_name" id="settingBusinessName">
+                                </div>
+                                <div class="form-group">
+                                    <label>Phone</label>
+                                    <input type="text" name="business_phone" id="settingBusinessPhone">
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Email</label>
+                                    <input type="email" name="business_email" id="settingBusinessEmail">
+                                </div>
+                                <div class="form-group">
+                                    <label>Address</label>
+                                    <input type="text" name="business_address" id="settingBusinessAddress">
+                                </div>
+                            </div>
+                            <button type="submit" class="btn-primary">Save Changes</button>
+                        </form>
+                    </div>
+                </section>
+
+                <!-- Booking Settings Section (Owner only) -->
+                <section id="bookingSettingsSection" class="section owner-only">
+                    <header class="section-header">
+                        <button class="back-btn" data-nav="settings">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M15 18l-6-6 6-6"/>
+                            </svg>
+                            Settings
+                        </button>
+                        <h1>Booking Settings</h1>
+                    </header>
+
+                    <div class="card">
+                        <p class="card-description">Configure appointment scheduling rules and policies.</p>
+                        <form id="bookingSettings">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Buffer between appointments (minutes)</label>
+                                    <input type="number" name="booking_buffer_minutes" id="settingBufferMinutes">
+                                </div>
+                                <div class="form-group">
+                                    <label>Minimum advance booking (hours)</label>
+                                    <input type="number" name="min_advance_booking_hours" id="settingMinAdvance">
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Maximum advance booking (days)</label>
+                                    <input type="number" name="max_advance_booking_days" id="settingMaxAdvance">
+                                </div>
+                                <div class="form-group">
+                                    <label>Cancellation policy (hours)</label>
+                                    <input type="number" name="cancellation_policy_hours" id="settingCancelHours">
+                                </div>
+                            </div>
+                            <button type="submit" class="btn-primary">Save Changes</button>
+                        </form>
+                    </div>
+                </section>
+            </main>
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <div id="modalOverlay" class="modal-overlay hidden"></div>
+
+    <!-- Time Off Modal -->
+    <div id="timeOffModal" class="modal hidden">
+        <div class="modal-header">
+            <h3>Add Time Off</h3>
+            <button class="modal-close">&times;</button>
+        </div>
+        <form id="timeOffForm">
+            <div class="form-group">
+                <label>Start Date & Time</label>
+                <input type="datetime-local" name="start_datetime" required>
+            </div>
+            <div class="form-group">
+                <label>End Date & Time</label>
+                <input type="datetime-local" name="end_datetime" required>
+            </div>
+            <div class="form-group">
+                <label>Reason (optional)</label>
+                <input type="text" name="reason" placeholder="e.g., Vacation, Personal day">
+            </div>
+            <button type="submit" class="btn-primary">Save</button>
+        </form>
+    </div>
+
+    <!-- Booking Detail Modal -->
+    <div id="bookingModal" class="modal hidden">
+        <div class="modal-header">
+            <h3>Booking Details</h3>
+            <button class="modal-close">&times;</button>
+        </div>
+        <div id="bookingModalContent">
+            <!-- Populated by JS -->
+        </div>
+    </div>
+
+    <!-- Add/Edit Team Member Modal -->
+    <div class="modal" id="teamMemberModal">
+        <div class="modal-overlay"></div>
+        <div class="modal-content modal-lg">
+            <div class="modal-header">
+                <h2 id="teamMemberModalTitle">Add Team Member</h2>
+                <button class="modal-close" id="closeTeamMemberModal">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M18 6L6 18M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+            <form id="teamMemberForm">
+                <div class="modal-body">
+                    <div class="form-section">
+                        <h3>Basic Information</h3>
+                        <!-- Avatar Upload -->
+                        <div class="avatar-upload-section">
+                            <div class="avatar-preview" id="memberFormAvatarPreview">
+                                <span class="avatar-initials" id="memberFormAvatarInitials">EM</span>
+                                <img id="memberFormAvatarImg" src="" alt="" style="display: none;">
+                            </div>
+                            <div class="avatar-upload-controls">
+                                <label class="btn-secondary btn-sm" for="memberFormAvatarInput">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="width: 16px; height: 16px; margin-right: 6px;">
+                                        <path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/>
+                                        <circle cx="12" cy="13" r="4"/>
+                                    </svg>
+                                    Upload Photo
+                                </label>
+                                <input type="file" id="memberFormAvatarInput" accept="image/*" style="display: none;">
+                                <button type="button" class="btn-text" id="memberFormAvatarRemove" style="display: none;">Remove</button>
+                                <input type="hidden" id="memberFormAvatarUrl">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="memberFormName">Full Name *</label>
+                                <input type="text" id="memberFormName" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="memberFormTitle">Title</label>
+                                <input type="text" id="memberFormTitle" placeholder="e.g., Lead Esthetician">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="memberFormEmail">Email *</label>
+                                <input type="email" id="memberFormEmail" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="memberFormPhone">Phone</label>
+                                <input type="tel" id="memberFormPhone">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h3>Profile</h3>
+                        <div class="form-group">
+                            <label for="memberFormBio">Bio</label>
+                            <textarea id="memberFormBio" rows="4" placeholder="Tell clients about this team member..."></textarea>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="memberFormYears">Years of Experience</label>
+                                <input type="number" id="memberFormYears" min="0">
+                            </div>
+                            <div class="form-group">
+                                <label for="memberFormColor">Calendar Color</label>
+                                <input type="color" id="memberFormColor" value="#D4944A">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="memberFormSpecialties">Specialties</label>
+                            <input type="text" id="memberFormSpecialties" placeholder="e.g., Glo2Facial, Reiki, Lash Extensions (comma separated)">
+                        </div>
+                        <div class="form-group">
+                            <label for="memberFormCertifications">Certifications</label>
+                            <textarea id="memberFormCertifications" rows="3" placeholder="e.g., Licensed Esthetician (PA), Reiki Master, Glo2Facial Certified (one per line)"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h3>Social Links</h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="memberFormInstagram">Instagram URL</label>
+                                <input type="url" id="memberFormInstagram" placeholder="https://instagram.com/...">
+                            </div>
+                            <div class="form-group">
+                                <label for="memberFormFacebook">Facebook URL</label>
+                                <input type="url" id="memberFormFacebook" placeholder="https://facebook.com/...">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn-secondary" id="cancelTeamMemberBtn">Cancel</button>
+                    <button type="submit" class="btn-primary">Save Team Member</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Edit Stylist Services Modal -->
+    <div class="modal" id="servicesModal">
+        <div class="modal-overlay"></div>
+        <div class="modal-content modal-lg">
+            <div class="modal-header">
+                <h2 id="servicesModalTitle">Edit Services</h2>
+                <button class="modal-close" id="closeServicesModal">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M18 6L6 18M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body services-modal-body">
+                <p class="services-modal-subtitle">Select services this team member offers. Custom pricing is optional.</p>
+                <div class="services-checklist" id="servicesChecklist">
+                    <!-- Populated by JS -->
+                    <div class="loading-state">
+                        <div class="spinner"></div>
+                        <span>Loading services...</span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-secondary" id="cancelServicesBtn">Cancel</button>
+                <button type="button" class="btn-primary" id="saveServicesBtn">Save Services</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- SMS Modal -->
+    <div class="modal" id="smsModal">
+        <div class="modal-overlay"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Send Text Message</h2>
+                <button class="modal-close" id="closeSmsModal">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M18 6L6 18M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="sms-recipient">
+                    <span class="sms-recipient-label">To:</span>
+                    <span class="sms-recipient-name" id="smsRecipientName"></span>
+                    <span class="sms-recipient-phone" id="smsRecipientPhone"></span>
+                </div>
+
+                <div class="sms-templates">
+                    <span class="sms-templates-label">Templates</span>
+                    <div class="sms-template-chips">
+                        <button type="button" class="sms-chip" data-template="reminder">Appointment Reminder</button>
+                        <button type="button" class="sms-chip" data-template="running-late">Running Late</button>
+                        <button type="button" class="sms-chip" data-template="follow-up">Follow-up</button>
+                        <button type="button" class="sms-chip" data-template="reschedule">Reschedule</button>
+                        <button type="button" class="sms-chip" data-template="thank-you">Thank You</button>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="smsMessage">Message</label>
+                    <textarea id="smsMessage" rows="4" maxlength="1600" placeholder="Type your message..."></textarea>
+                    <div class="sms-char-count"><span id="smsCharCount">0</span> / 1600</div>
+                </div>
+            </div>
+            <div class="sms-modal-footer">
+                <button type="button" class="btn-secondary" id="cancelSmsBtn">Cancel</button>
+                <button type="button" class="btn-primary sms-send-btn" id="sendSmsBtn">
+                    <span class="sms-send-text">Send SMS</span>
+                    <span class="sms-send-loading hidden">Sending...</span>
+                </button>
+            </div>
+            <div class="sms-status hidden" id="smsStatus"></div>
+        </div>
+    </div>
+
+    <!-- Client Preferred Services Modal -->
+    <div class="modal" id="clientServicesModal">
+        <div class="modal-overlay"></div>
+        <div class="modal-content modal-lg">
+            <div class="modal-header">
+                <h2 id="clientServicesModalTitle">Preferred Services</h2>
+                <button class="modal-close" id="closeClientServicesModal">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M18 6L6 18M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body services-modal-body">
+                <p class="services-modal-subtitle">Select this client's preferred services.</p>
+                <div class="services-checklist" id="clientServicesChecklist">
+                    <div class="loading-state">
+                        <div class="spinner"></div>
+                        <span>Loading services...</span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-secondary" id="cancelClientServicesBtn">Cancel</button>
+                <button type="button" class="btn-primary" id="saveClientServicesBtn">Save Preferred Services</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add/Edit Service Modal -->
+    <div class="modal" id="serviceModal">
+        <div class="modal-overlay"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="serviceModalTitle">Add Service</h2>
+                <button class="modal-close" id="closeServiceModal">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M18 6L6 18M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+            <form id="serviceForm">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="serviceFormName">Service Name *</label>
+                        <input type="text" id="serviceFormName" required placeholder="e.g., Classic Full Set">
+                    </div>
+                    <div class="form-group">
+                        <label for="serviceFormCategory">Category *</label>
+                        <select id="serviceFormCategory" required>
+                            <option value="">Select a category...</option>
+                        </select>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="serviceFormDuration">Duration (minutes) *</label>
+                            <input type="number" id="serviceFormDuration" required min="5" step="5" placeholder="60">
+                        </div>
+                        <div class="form-group">
+                            <label for="serviceFormPrice">Base Price ($) *</label>
+                            <input type="number" id="serviceFormPrice" required min="0" step="0.01" placeholder="150.00">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="serviceFormDescription">Description</label>
+                        <textarea id="serviceFormDescription" rows="3" placeholder="Describe this service..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="serviceFormDeposit">Deposit Amount ($)</label>
+                        <input type="number" id="serviceFormDeposit" min="0" step="0.01" placeholder="0.00">
+                    </div>
+                    <div class="form-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="serviceFormActive" checked>
+                            <span>Service is active and available for booking</span>
+                        </label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn-secondary" id="cancelServiceBtn">Cancel</button>
+                    <button type="submit" class="btn-primary">Save Service</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add/Edit Category Modal -->
+    <div class="modal" id="categoryModal">
+        <div class="modal-overlay"></div>
+        <div class="modal-content modal-sm">
+            <div class="modal-header">
+                <h2 id="categoryModalTitle">Add Category</h2>
+                <button class="modal-close" id="closeCategoryModal">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M18 6L6 18M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+            <form id="categoryForm">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="categoryFormName">Category Name *</label>
+                        <input type="text" id="categoryFormName" required placeholder="e.g., Facial Treatments">
+                    </div>
+                    <div class="form-group">
+                        <label for="categoryFormDescription">Description</label>
+                        <textarea id="categoryFormDescription" rows="2" placeholder="Brief description of this category..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="categoryFormOrder">Display Order</label>
+                        <input type="number" id="categoryFormOrder" min="1" placeholder="1">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn-secondary" id="cancelCategoryBtn">Cancel</button>
+                    <button type="submit" class="btn-primary">Save Category</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="admin.js?v=7"></script>
+</body>
+</html>
